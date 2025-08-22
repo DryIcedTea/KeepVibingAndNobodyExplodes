@@ -13,7 +13,6 @@ namespace KeepVibingAndNobodyExplodes
         private ButtplugWsClient client;
         private ManualLogSource logger;
         
-        // Track active vibration coroutines per device to prevent conflicts
         private Dictionary<string, Coroutine> activeVibrationCoroutines = new Dictionary<string, Coroutine>();
         
         public bool IsConnected => client != null && client.IsConnected;
@@ -25,7 +24,7 @@ namespace KeepVibingAndNobodyExplodes
         {
             logger = logSource;
             
-            // Add the ButtplugWsClient component
+            
             client = gameObject.AddComponent<ButtplugWsClient>();
             client.OnDeviceListUpdated += (sender, args) =>
             {

@@ -126,21 +126,24 @@ public class Plugin : BaseUnityPlugin
     /// </summary>
     /// <param name="power">Vibration power (0.0 to 1.0)</param>
     /// <param name="duration">Duration in seconds</param>
-    /// <param name="delayByFrame">Should it delay by 1 frame?</param>
-    public static void TriggerVibration(float power, float duration, bool delayByFrame = false)
+    /// <param name="frameDelay">Number of frames to delay (0 for no delay)</param>
+    public static void TriggerVibration(float power, float duration, int frameDelay = 0)
     {
-        if (delayByFrame)
+        if (frameDelay > 0)
         {
-            instance?.StartCoroutine(TriggerVibrationDelayed(power, duration));
+            instance?.StartCoroutine(TriggerVibrationDelayed(power, duration, frameDelay));
         }
         else
         {
             instance?.VibrateAllDevices(power, duration);
         }
     }
-    private static IEnumerator TriggerVibrationDelayed(float power, float duration)
+    private static IEnumerator TriggerVibrationDelayed(float power, float duration, int frameDelay)
     {
-        yield return null; // Wait for one frame
+        for (int i = 0; i < frameDelay; i++)
+        {
+            yield return null; // Wait for one frame
+        }
         instance?.VibrateAllDevices(power, duration);
     }
 }
@@ -185,7 +188,7 @@ public class StrikeVibrationPatch
     public static void Postfix()
     {
         
-        Plugin.TriggerVibration(0.7f, 0.5f, true);
+        Plugin.TriggerVibration(0.7f, 0.5f, 1);
     }
 }
 
@@ -199,7 +202,7 @@ public class ExplosionVibrationPatch
     [HarmonyPostfix]
     public static void Postfix()
     {
-        Plugin.TriggerVibration(1.0f, 3.0f, true);
+        Plugin.TriggerVibration(1.0f, 3.0f, 2);
     }
 }
 
