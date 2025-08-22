@@ -1,0 +1,14 @@
+F:\Github\KeepVibingAndNobodyExplodes\obj\Debug\net35\KeepVibingAndNobodyExplodes.csproj.AssemblyReference.cache
+F:\Github\KeepVibingAndNobodyExplodes\obj\Debug\net35\MyPluginInfo.cs
+F:\Github\KeepVibingAndNobodyExplodes\obj\Debug\net35\KeepVibingAndNobodyExplodes.GeneratedMSBuildEditorConfig.editorconfig
+F:\Github\KeepVibingAndNobodyExplodes\obj\Debug\net35\KeepVibingAndNobodyExplodes.AssemblyInfoInputs.cache
+F:\Github\KeepVibingAndNobodyExplodes\obj\Debug\net35\KeepVibingAndNobodyExplodes.AssemblyInfo.cs
+F:\Github\KeepVibingAndNobodyExplodes\obj\Debug\net35\KeepVibingAndNobodyExplodes.csproj.CoreCompileInputs.cache
+F:\Github\KeepVibingAndNobodyExplodes\bin\Debug\net35\KeepVibingAndNobodyExplodes.dll
+F:\Github\KeepVibingAndNobodyExplodes\bin\Debug\net35\KeepVibingAndNobodyExplodes.pdb
+F:\Github\KeepVibingAndNobodyExplodes\bin\Debug\net35\LitJSON.dll
+F:\Github\KeepVibingAndNobodyExplodes\bin\Debug\net35\SuperSocket.ClientEngine.dll
+F:\Github\KeepVibingAndNobodyExplodes\bin\Debug\net35\WebSocket4Net.dll
+F:\Github\KeepVibingAndNobodyExplodes\obj\Debug\net35\KeepVibi.5750A8D5.Up2Date
+F:\Github\KeepVibingAndNobodyExplodes\obj\Debug\net35\KeepVibingAndNobodyExplodes.dll
+F:\Github\KeepVibingAndNobodyExplodes\obj\Debug\net35\KeepVibingAndNobodyExplodes.pdb

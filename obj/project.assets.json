@@ -36,19 +36,19 @@
           "build/BepInEx.PluginInfoProps.props": {}
         }
       },
-      "HarmonyX/2.7.0": {
+      "HarmonyX/2.14.0": {
         "type": "package",
         "dependencies": {
-          "MonoMod.RuntimeDetour": "21.12.13.1"
+          "MonoMod.RuntimeDetour": "25.2.2"
         },
         "compile": {
           "lib/net35/0Harmony.dll": {
-            "related": ".xml"
+            "related": ".pdb;.xml"
           }
         },
         "runtime": {
           "lib/net35/0Harmony.dll": {
-            "related": ".xml"
+            "related": ".pdb;.xml"
           }
         }
       },
@@ -88,42 +88,114 @@
           "lib/net35/Mono.Cecil.dll": {}
         }
       },
-      "MonoMod.RuntimeDetour/21.12.13.1": {
+      "MonoMod.Backports/1.1.2": {
         "type": "package",
         "dependencies": {
-          "Mono.Cecil": "0.10.4",
-          "MonoMod.Utils": "21.12.13.1"
+          "MonoMod.ILHelpers": "1.1.0"
         },
         "frameworkAssemblies": [
           "System"
         ],
         "compile": {
-          "lib/net35/MonoMod.RuntimeDetour.dll": {
-            "related": ".xml"
+          "lib/net35/MonoMod.Backports.dll": {
+            "related": ".pdb;.xml"
           }
         },
         "runtime": {
-          "lib/net35/MonoMod.RuntimeDetour.dll": {
-            "related": ".xml"
+          "lib/net35/MonoMod.Backports.dll": {
+            "related": ".pdb;.xml"
           }
         }
       },
-      "MonoMod.Utils/21.12.13.1": {
+      "MonoMod.Core/1.2.2": {
         "type": "package",
         "dependencies": {
-          "Mono.Cecil": "0.10.4"
+          "Mono.Cecil": "0.10.4",
+          "MonoMod.Backports": "1.1.2",
+          "MonoMod.ILHelpers": "1.1.0",
+          "MonoMod.Utils": "25.0.8"
+        },
+        "frameworkAssemblies": [
+          "System",
+          "mscorlib"
+        ],
+        "compile": {
+          "lib/net35/MonoMod.Core.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net35/MonoMod.Iced.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net35/MonoMod.Core.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net35/MonoMod.Iced.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "build": {
+          "buildTransitive/MonoMod.Core.targets": {}
+        }
+      },
+      "MonoMod.ILHelpers/1.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/net35/MonoMod.ILHelpers.dll": {
+            "related": ".pdb"
+          }
+        },
+        "runtime": {
+          "lib/net35/MonoMod.ILHelpers.dll": {
+            "related": ".pdb"
+          }
+        }
+      },
+      "MonoMod.RuntimeDetour/25.2.2": {
+        "type": "package",
+        "dependencies": {
+          "Mono.Cecil": "0.10.4",
+          "MonoMod.Backports": "1.1.2",
+          "MonoMod.Core": "1.2.2",
+          "MonoMod.ILHelpers": "1.1.0",
+          "MonoMod.Utils": "25.0.8"
+        },
+        "frameworkAssemblies": [
+          "System"
+        ],
+        "compile": {
+          "lib/net35/MonoMod.RuntimeDetour.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net35/MonoMod.RuntimeDetour.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "build": {
+          "buildTransitive/MonoMod.RuntimeDetour.targets": {}
+        }
+      },
+      "MonoMod.Utils/25.0.8": {
+        "type": "package",
+        "dependencies": {
+          "Mono.Cecil": "0.10.4",
+          "MonoMod.Backports": "1.1.2",
+          "MonoMod.ILHelpers": "1.1.0"
         },
         "frameworkAssemblies": [
           "System"
         ],
         "compile": {
           "lib/net35/MonoMod.Utils.dll": {
-            "related": ".xml"
+            "related": ".pdb;.xml"
           }
         },
         "runtime": {
           "lib/net35/MonoMod.Utils.dll": {
-            "related": ".xml"
+            "related": ".pdb;.xml"
           }
         }
       },
@@ -261,21 +333,24 @@
         "build/BepInEx.PluginInfoProps.props"
       ]
     },
-    "HarmonyX/2.7.0": {
-      "sha512": "lec/SkduQspMa3Pi/nM/NSvA84Za8HCCWA8ybdToKiTqnBZa+JC5g6rxoFQCg/1vNuYcvjy77edePZzIEsRmvw==",
+    "HarmonyX/2.14.0": {
+      "sha512": "ZxfuszLYwbSEEUuy/ifXUrL+kwvt7CNahzUFS12zABeBMwdWG5vdthk1XRMdZlg2aRjhRSAwuKlDMD3Bmao/Ew==",
       "type": "package",
-      "path": "harmonyx/2.7.0",
+      "path": "harmonyx/2.14.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE",
-        "harmonyx.2.7.0.nupkg.sha512",
+        "harmonyx.2.14.0.nupkg.sha512",
         "harmonyx.nuspec",
         "lib/net35/0Harmony.dll",
+        "lib/net35/0Harmony.pdb",
         "lib/net35/0Harmony.xml",
-        "lib/net45/0Harmony.dll",
-        "lib/net45/0Harmony.xml",
+        "lib/net452/0Harmony.dll",
+        "lib/net452/0Harmony.pdb",
+        "lib/net452/0Harmony.xml",
         "lib/netstandard2.0/0Harmony.dll",
+        "lib/netstandard2.0/0Harmony.pdb",
         "lib/netstandard2.0/0Harmony.xml",
         "logo_mini.png"
       ]
@@ -487,41 +562,225 @@
         "mono.cecil.nuspec"
       ]
     },
-    "MonoMod.RuntimeDetour/21.12.13.1": {
-      "sha512": "65mB+bHjT6UCGCgO+/pYhpuGPf96rQ1Whwkut/x7cqVIW0DTndDFyWc/3bngzhnY/Y6IYtBMlXsU2ATq+CxpHg==",
+    "MonoMod.Backports/1.1.2": {
+      "sha512": "baYlNy8n8kmaNhNvqmZ/dIPOeO1r9//dG1i2WbunMWtWZ2EKtIgmXaS+ZzphzTsikkGnoD4Jwr5g0TVdpDjgpw==",
       "type": "package",
-      "path": "monomod.runtimedetour/21.12.13.1",
+      "path": "monomod.backports/1.1.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "README.md",
+        "icon.png",
+        "lib/net35/MonoMod.Backports.dll",
+        "lib/net35/MonoMod.Backports.pdb",
+        "lib/net35/MonoMod.Backports.xml",
+        "lib/net452/MonoMod.Backports.dll",
+        "lib/net452/MonoMod.Backports.pdb",
+        "lib/net452/MonoMod.Backports.xml",
+        "lib/net5.0/MonoMod.Backports.dll",
+        "lib/net5.0/MonoMod.Backports.pdb",
+        "lib/net5.0/MonoMod.Backports.xml",
+        "lib/net6.0/MonoMod.Backports.dll",
+        "lib/net6.0/MonoMod.Backports.pdb",
+        "lib/net6.0/MonoMod.Backports.xml",
+        "lib/net7.0/MonoMod.Backports.dll",
+        "lib/net7.0/MonoMod.Backports.pdb",
+        "lib/net7.0/MonoMod.Backports.xml",
+        "lib/net8.0/MonoMod.Backports.dll",
+        "lib/net8.0/MonoMod.Backports.pdb",
+        "lib/net8.0/MonoMod.Backports.xml",
+        "lib/netcoreapp2.1/MonoMod.Backports.dll",
+        "lib/netcoreapp2.1/MonoMod.Backports.pdb",
+        "lib/netcoreapp2.1/MonoMod.Backports.xml",
+        "lib/netcoreapp3.0/MonoMod.Backports.dll",
+        "lib/netcoreapp3.0/MonoMod.Backports.pdb",
+        "lib/netcoreapp3.0/MonoMod.Backports.xml",
+        "lib/netcoreapp3.1/MonoMod.Backports.dll",
+        "lib/netcoreapp3.1/MonoMod.Backports.pdb",
+        "lib/netcoreapp3.1/MonoMod.Backports.xml",
+        "lib/netstandard2.0/MonoMod.Backports.dll",
+        "lib/netstandard2.0/MonoMod.Backports.pdb",
+        "lib/netstandard2.0/MonoMod.Backports.xml",
+        "lib/netstandard2.1/MonoMod.Backports.dll",
+        "lib/netstandard2.1/MonoMod.Backports.pdb",
+        "lib/netstandard2.1/MonoMod.Backports.xml",
+        "monomod.backports.1.1.2.nupkg.sha512",
+        "monomod.backports.nuspec"
+      ]
+    },
+    "MonoMod.Core/1.2.2": {
+      "sha512": "3R9mQ7TxeQQBFLtGTR2VIDSBGx/I7d8RYpxvW1Mot0/PB6+UOnHr+lkw7dj8cus8YSnLdCFT+CG4JW89daEvjg==",
+      "type": "package",
+      "path": "monomod.core/1.2.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "README.md",
+        "buildTransitive/MonoMod.CheckTargetRuntime.targets",
+        "buildTransitive/MonoMod.Core.targets",
+        "icon.png",
+        "lib/net35/MonoMod.Core.dll",
+        "lib/net35/MonoMod.Core.pdb",
+        "lib/net35/MonoMod.Core.xml",
+        "lib/net35/MonoMod.Iced.dll",
+        "lib/net35/MonoMod.Iced.pdb",
+        "lib/net35/MonoMod.Iced.xml",
+        "lib/net452/MonoMod.Core.dll",
+        "lib/net452/MonoMod.Core.pdb",
+        "lib/net452/MonoMod.Core.xml",
+        "lib/net452/MonoMod.Iced.dll",
+        "lib/net452/MonoMod.Iced.pdb",
+        "lib/net452/MonoMod.Iced.xml",
+        "lib/net5.0/MonoMod.Core.dll",
+        "lib/net5.0/MonoMod.Core.pdb",
+        "lib/net5.0/MonoMod.Core.xml",
+        "lib/net5.0/MonoMod.Iced.dll",
+        "lib/net5.0/MonoMod.Iced.pdb",
+        "lib/net5.0/MonoMod.Iced.xml",
+        "lib/net6.0/MonoMod.Core.dll",
+        "lib/net6.0/MonoMod.Core.pdb",
+        "lib/net6.0/MonoMod.Core.xml",
+        "lib/net6.0/MonoMod.Iced.dll",
+        "lib/net6.0/MonoMod.Iced.pdb",
+        "lib/net6.0/MonoMod.Iced.xml",
+        "lib/net7.0/MonoMod.Core.dll",
+        "lib/net7.0/MonoMod.Core.pdb",
+        "lib/net7.0/MonoMod.Core.xml",
+        "lib/net7.0/MonoMod.Iced.dll",
+        "lib/net7.0/MonoMod.Iced.pdb",
+        "lib/net7.0/MonoMod.Iced.xml",
+        "lib/net8.0/MonoMod.Core.dll",
+        "lib/net8.0/MonoMod.Core.pdb",
+        "lib/net8.0/MonoMod.Core.xml",
+        "lib/net8.0/MonoMod.Iced.dll",
+        "lib/net8.0/MonoMod.Iced.pdb",
+        "lib/net8.0/MonoMod.Iced.xml",
+        "lib/net9.0/MonoMod.Core.dll",
+        "lib/net9.0/MonoMod.Core.pdb",
+        "lib/net9.0/MonoMod.Core.xml",
+        "lib/net9.0/MonoMod.Iced.dll",
+        "lib/net9.0/MonoMod.Iced.pdb",
+        "lib/net9.0/MonoMod.Iced.xml",
+        "lib/netstandard2.0/MonoMod.Core.dll",
+        "lib/netstandard2.0/MonoMod.Core.pdb",
+        "lib/netstandard2.0/MonoMod.Core.xml",
+        "lib/netstandard2.0/MonoMod.Iced.dll",
+        "lib/netstandard2.0/MonoMod.Iced.pdb",
+        "lib/netstandard2.0/MonoMod.Iced.xml",
+        "logo.png",
+        "monomod.core.1.2.2.nupkg.sha512",
+        "monomod.core.nuspec"
+      ]
+    },
+    "MonoMod.ILHelpers/1.1.0": {
+      "sha512": "L2FWjhTrv7tcIxshfZ+M3OcaNr4cNw0IwiVZEgwqRnZ5QAN3+RrNJ8ZwCzwXUWyPDqooJxMcjjg8PsSYUiNBjQ==",
+      "type": "package",
+      "path": "monomod.ilhelpers/1.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon.png",
+        "lib/net35/MonoMod.ILHelpers.dll",
+        "lib/net35/MonoMod.ILHelpers.pdb",
+        "lib/net452/MonoMod.ILHelpers.dll",
+        "lib/net452/MonoMod.ILHelpers.pdb",
+        "lib/net5.0/MonoMod.ILHelpers.dll",
+        "lib/net5.0/MonoMod.ILHelpers.pdb",
+        "lib/net6.0/MonoMod.ILHelpers.dll",
+        "lib/net6.0/MonoMod.ILHelpers.pdb",
+        "lib/net7.0/MonoMod.ILHelpers.dll",
+        "lib/net7.0/MonoMod.ILHelpers.pdb",
+        "lib/net8.0/MonoMod.ILHelpers.dll",
+        "lib/net8.0/MonoMod.ILHelpers.pdb",
+        "lib/netcoreapp2.1/MonoMod.ILHelpers.dll",
+        "lib/netcoreapp2.1/MonoMod.ILHelpers.pdb",
+        "lib/netcoreapp3.0/MonoMod.ILHelpers.dll",
+        "lib/netcoreapp3.0/MonoMod.ILHelpers.pdb",
+        "lib/netcoreapp3.1/MonoMod.ILHelpers.dll",
+        "lib/netcoreapp3.1/MonoMod.ILHelpers.pdb",
+        "lib/netstandard2.0/MonoMod.ILHelpers.dll",
+        "lib/netstandard2.0/MonoMod.ILHelpers.pdb",
+        "lib/netstandard2.1/MonoMod.ILHelpers.dll",
+        "lib/netstandard2.1/MonoMod.ILHelpers.pdb",
+        "monomod.ilhelpers.1.1.0.nupkg.sha512",
+        "monomod.ilhelpers.nuspec"
+      ]
+    },
+    "MonoMod.RuntimeDetour/25.2.2": {
+      "sha512": "uqkdEZkvGv3nxEGolyateQXze/GFTuYYuMA9iW6Yjyt1Njqvx2SGYCEgdDgHh+kfhSZ6MymGU/20t99dU4DaVQ==",
+      "type": "package",
+      "path": "monomod.runtimedetour/25.2.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "buildTransitive/MonoMod.CheckTargetRuntime.targets",
+        "buildTransitive/MonoMod.RuntimeDetour.targets",
+        "icon.png",
         "lib/net35/MonoMod.RuntimeDetour.dll",
+        "lib/net35/MonoMod.RuntimeDetour.pdb",
         "lib/net35/MonoMod.RuntimeDetour.xml",
         "lib/net452/MonoMod.RuntimeDetour.dll",
+        "lib/net452/MonoMod.RuntimeDetour.pdb",
         "lib/net452/MonoMod.RuntimeDetour.xml",
         "lib/net5.0/MonoMod.RuntimeDetour.dll",
+        "lib/net5.0/MonoMod.RuntimeDetour.pdb",
         "lib/net5.0/MonoMod.RuntimeDetour.xml",
+        "lib/net6.0/MonoMod.RuntimeDetour.dll",
+        "lib/net6.0/MonoMod.RuntimeDetour.pdb",
+        "lib/net6.0/MonoMod.RuntimeDetour.xml",
+        "lib/net7.0/MonoMod.RuntimeDetour.dll",
+        "lib/net7.0/MonoMod.RuntimeDetour.pdb",
+        "lib/net7.0/MonoMod.RuntimeDetour.xml",
+        "lib/net8.0/MonoMod.RuntimeDetour.dll",
+        "lib/net8.0/MonoMod.RuntimeDetour.pdb",
+        "lib/net8.0/MonoMod.RuntimeDetour.xml",
+        "lib/net9.0/MonoMod.RuntimeDetour.dll",
+        "lib/net9.0/MonoMod.RuntimeDetour.pdb",
+        "lib/net9.0/MonoMod.RuntimeDetour.xml",
         "lib/netstandard2.0/MonoMod.RuntimeDetour.dll",
+        "lib/netstandard2.0/MonoMod.RuntimeDetour.pdb",
         "lib/netstandard2.0/MonoMod.RuntimeDetour.xml",
-        "monomod.runtimedetour.21.12.13.1.nupkg.sha512",
+        "monomod.runtimedetour.25.2.2.nupkg.sha512",
         "monomod.runtimedetour.nuspec"
       ]
     },
-    "MonoMod.Utils/21.12.13.1": {
-      "sha512": "/H+0RMWqx/D1/fSuY5jhY6GFvqhdYdlnI7J3IfL8P6y4nJkoZDxqts6+RxWWOz4pbnJdWnxSjS8XG+Lq6rUi7w==",
+    "MonoMod.Utils/25.0.8": {
+      "sha512": "8wfyawgvGqUvfchAj7/gPazAjXO8CWNyXH+C0az+hgJH/80zVL5LxDhQMz0NQTyoCEJWU6gNBGc7CL+G7vCbaQ==",
       "type": "package",
-      "path": "monomod.utils/21.12.13.1",
+      "path": "monomod.utils/25.0.8",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "README.md",
+        "icon.png",
         "lib/net35/MonoMod.Utils.dll",
+        "lib/net35/MonoMod.Utils.pdb",
         "lib/net35/MonoMod.Utils.xml",
         "lib/net452/MonoMod.Utils.dll",
+        "lib/net452/MonoMod.Utils.pdb",
         "lib/net452/MonoMod.Utils.xml",
         "lib/net5.0/MonoMod.Utils.dll",
+        "lib/net5.0/MonoMod.Utils.pdb",
         "lib/net5.0/MonoMod.Utils.xml",
+        "lib/net6.0/MonoMod.Utils.dll",
+        "lib/net6.0/MonoMod.Utils.pdb",
+        "lib/net6.0/MonoMod.Utils.xml",
+        "lib/net7.0/MonoMod.Utils.dll",
+        "lib/net7.0/MonoMod.Utils.pdb",
+        "lib/net7.0/MonoMod.Utils.xml",
+        "lib/net8.0/MonoMod.Utils.dll",
+        "lib/net8.0/MonoMod.Utils.pdb",
+        "lib/net8.0/MonoMod.Utils.xml",
+        "lib/net9.0/MonoMod.Utils.dll",
+        "lib/net9.0/MonoMod.Utils.pdb",
+        "lib/net9.0/MonoMod.Utils.xml",
         "lib/netstandard2.0/MonoMod.Utils.dll",
+        "lib/netstandard2.0/MonoMod.Utils.pdb",
         "lib/netstandard2.0/MonoMod.Utils.xml",
-        "monomod.utils.21.12.13.1.nupkg.sha512",
+        "monomod.utils.25.0.8.nupkg.sha512",
         "monomod.utils.nuspec"
       ]
     },
@@ -715,6 +974,7 @@
       "BepInEx.Analyzers >= 1.*",
       "BepInEx.Core >= 5.*",
       "BepInEx.PluginInfoProps >= 2.*",
+      "HarmonyX >= 2.14.0",
       "LitJson >= 0.19.0",
       "Microsoft.NETFramework.ReferenceAssemblies >= 1.0.2",
       "UnityEngine.Modules >= 2017.4.22",
@@ -786,6 +1046,10 @@
           "BepInEx.PluginInfoProps": {
             "target": "Package",
             "version": "[2.*, )"
+          },
+          "HarmonyX": {
+            "target": "Package",
+            "version": "[2.14.0, )"
           },
           "LitJson": {
             "target": "Package",
