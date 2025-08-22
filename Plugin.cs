@@ -16,7 +16,7 @@ public class Plugin : BaseUnityPlugin
     private ButtplugManager buttplugManager;
     private static Plugin instance;
     
-    private const string harmonyId = "com.yourname.ktane.hapticsmod";
+    private const string harmonyId = "com.dryicedmatcha.ktane.hapticsmod";
     private static Harmony harmonyInstance;
     
     private void Awake()
@@ -312,6 +312,35 @@ public class SimonSaysHapticPatch
         {
             float power = 0.2f + (solveProgress * 0.2f);
             power = Mathf.Clamp(power, 0.2f, 1.0f);
+
+            Plugin.TriggerVibration(power, DURATION);
+        }
+    }
+}
+
+[HarmonyPatch(typeof(WhosOnFirstComponent), "ButtonDown")]
+public class WhosOnFirstHapticPatch
+{
+    private const float DURATION = 1.0f;
+    
+    private static readonly FieldInfo currentStageField = AccessTools.Field(typeof(WhosOnFirstComponent), "currentStage");
+    
+    [HarmonyPrefix]
+    public static void Prefix(WhosOnFirstComponent __instance, out int __state)
+    {
+        __state = (int)currentStageField.GetValue(__instance);
+    }
+    
+    [HarmonyPostfix]
+    public static void Postfix(bool __result, int __state)
+    {
+        if (__result)
+        {
+            int stageBeforePress = __state;
+            
+            float power = 0.25f + (stageBeforePress * 0.25f);
+            
+            power = Mathf.Clamp(power, 0.25f, 0.75f);
 
             Plugin.TriggerVibration(power, DURATION);
         }
