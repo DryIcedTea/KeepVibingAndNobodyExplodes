@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("KeepVibingAndNobodyExplodes")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bef33afd834ebc90530c82e3ca1f846cf184d529")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ff9943c344c3b92c545b3d6eebf6059ea1ac4e94")]
 [assembly: System.Reflection.AssemblyProductAttribute("My first plugin")]
 [assembly: System.Reflection.AssemblyTitleAttribute("KeepVibingAndNobodyExplodes")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

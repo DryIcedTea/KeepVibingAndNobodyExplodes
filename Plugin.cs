@@ -243,3 +243,41 @@ public class BigButtonHapticPatch
         }
     }
 }
+
+/// <summary>
+/// VIBRATION ON KEYPAD MODULE AKA SYMBOLS MODULE
+/// </summary>
+[HarmonyPatch(typeof(KeypadComponent), "ButtonDown")]
+public class KeypadHapticPatch
+{
+    
+    //Check how many buttons are alredy pressed
+    [HarmonyPrefix]
+    public static void Prefix(KeypadComponent __instance, out int __state)
+    {
+        int correctButtonsPressed = 0;
+        foreach (var button in __instance.buttons)
+        {
+            if (button.IsStayingDown)
+            {
+                correctButtonsPressed++;
+            }
+        }
+        __state = correctButtonsPressed;
+    }
+    
+    [HarmonyPostfix]
+    public static void Postfix(bool __result, int __state)
+    {
+        if (__result)
+        {
+            int correctButtonsPressedBeforeThisOne = __state;
+            
+            float power = 0.25f + (correctButtonsPressedBeforeThisOne * 0.25f);
+            
+            power = Mathf.Clamp(power, 0.25f, 1.0f);
+
+            Plugin.TriggerVibration(power, 0.3f);
+        }
+    }
+}
