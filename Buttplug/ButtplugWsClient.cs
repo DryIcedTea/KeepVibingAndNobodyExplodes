@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using LitJson;
@@ -10,6 +9,36 @@ using BepInEx.Logging;
 
 namespace KeepVibingAndNobodyExplodes.Buttplug
 {
+    // Wrapper class to avoid ambiguous reference with HarmonyX
+    internal class MessageQueue
+    {
+        private readonly object _queue;
+        private readonly System.Type _queueType;
+        
+        public MessageQueue()
+        {
+            // Use reflection to avoid ambiguous reference
+            var assembly = System.Reflection.Assembly.GetAssembly(typeof(System.Collections.Concurrent.ConcurrentBag<>));
+            _queueType = assembly.GetType("System.Collections.Concurrent.ConcurrentQueue`1").MakeGenericType(typeof(IEnumerator));
+            _queue = System.Activator.CreateInstance(_queueType);
+        }
+        
+        public void Enqueue(IEnumerator item) 
+        {
+            var method = _queueType.GetMethod("Enqueue");
+            method.Invoke(_queue, new object[] { item });
+        }
+        
+        public bool TryDequeue(out IEnumerator result) 
+        {
+            var method = _queueType.GetMethod("TryDequeue");
+            var parameters = new object[] { null };
+            bool success = (bool)method.Invoke(_queue, parameters);
+            result = (IEnumerator)parameters[0];
+            return success;
+        }
+    }
+
     public class DeviceListEventArgs : EventArgs
     {
         public List<Device> Before { get; set; }
@@ -19,7 +48,7 @@ namespace KeepVibingAndNobodyExplodes.Buttplug
     public class ButtplugWsClient : MonoBehaviour
     {
         private WebSocket websocket;
-        private ConcurrentQueue<IEnumerator> incoming;
+        private MessageQueue incoming;
         
         public event EventHandler<DeviceListEventArgs> OnDeviceListUpdated;
         
@@ -61,7 +90,7 @@ namespace KeepVibingAndNobodyExplodes.Buttplug
         {
             IsConnected = false;
             Devices = new List<Device>();
-            incoming = new ConcurrentQueue<IEnumerator>();
+            incoming = new MessageQueue();
             string address = WebSocketHost + ":" + WebSocketPort;
             
             if (!reconnecting)

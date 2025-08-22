@@ -12,3 +12,8 @@ F:\Github\KeepVibingAndNobodyExplodes\bin\Debug\net35\WebSocket4Net.dll
 F:\Github\KeepVibingAndNobodyExplodes\obj\Debug\net35\KeepVibi.5750A8D5.Up2Date
 F:\Github\KeepVibingAndNobodyExplodes\obj\Debug\net35\KeepVibingAndNobodyExplodes.dll
 F:\Github\KeepVibingAndNobodyExplodes\obj\Debug\net35\KeepVibingAndNobodyExplodes.pdb
+F:\Github\KeepVibingAndNobodyExplodes\bin\Debug\net35\MonoMod.Backports.dll
+F:\Github\KeepVibingAndNobodyExplodes\bin\Debug\net35\MonoMod.Core.dll
+F:\Github\KeepVibingAndNobodyExplodes\bin\Debug\net35\MonoMod.Iced.dll
+F:\Github\KeepVibingAndNobodyExplodes\bin\Debug\net35\MonoMod.ILHelpers.dll
+F:\Github\KeepVibingAndNobodyExplodes\bin\Debug\net35\Assembly-CSharp.dll
