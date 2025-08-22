@@ -1,4 +1,7 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
 using BepInEx;
 using BepInEx.Logging;
 using UnityEngine;
@@ -278,6 +281,39 @@ public class KeypadHapticPatch
             power = Mathf.Clamp(power, 0.25f, 1.0f);
 
             Plugin.TriggerVibration(power, 0.3f);
+        }
+    }
+}
+
+/// <summary>
+/// SIMON SAYS MODULE
+/// </summary>
+[HarmonyPatch(typeof(SimonComponent), "ButtonDown")]
+public class SimonSaysHapticPatch
+{
+    private const float DURATION = 0.5f;
+    
+    private static readonly FieldInfo solveProgressField = AccessTools.Field(typeof(SimonComponent), "solveProgress");
+    private static readonly FieldInfo currentSequenceField = AccessTools.Field(typeof(SimonComponent), "currentSequence");
+    
+    [HarmonyPrefix]
+    public static void Prefix(SimonComponent __instance, int index)
+    {
+        
+        if (__instance.IsSolved || !__instance.IsActive)
+        {
+            return;
+        }
+        
+        int solveProgress = (int)solveProgressField.GetValue(__instance);
+        int[] currentSequence = (int[])currentSequenceField.GetValue(__instance);
+        
+        if (__instance.MapToSolution(currentSequence[solveProgress]) == index)
+        {
+            float power = 0.2f + (solveProgress * 0.2f);
+            power = Mathf.Clamp(power, 0.2f, 1.0f);
+
+            Plugin.TriggerVibration(power, DURATION);
         }
     }
 }
