@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "dgSpecHash": "QhxdlUSWB7Y=",
+  "success": true,
+  "projectFilePath": "F:\\Github\\KeepVibingAndNobodyExplodes\\KeepVibingAndNobodyExplodes.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Anders\\.nuget\\packages\\bepinex.analyzers\\1.0.8\\bepinex.analyzers.1.0.8.nupkg.sha512",
+    "C:\\Users\\Anders\\.nuget\\packages\\bepinex.baselib\\5.4.20\\bepinex.baselib.5.4.20.nupkg.sha512",
+    "C:\\Users\\Anders\\.nuget\\packages\\bepinex.core\\5.4.21\\bepinex.core.5.4.21.nupkg.sha512",
+    "C:\\Users\\Anders\\.nuget\\packages\\bepinex.plugininfoprops\\2.1.0\\bepinex.plugininfoprops.2.1.0.nupkg.sha512",
+    "C:\\Users\\Anders\\.nuget\\packages\\harmonyx\\2.7.0\\harmonyx.2.7.0.nupkg.sha512",
+    "C:\\Users\\Anders\\.nuget\\packages\\litjson\\0.19.0\\litjson.0.19.0.nupkg.sha512",
+    "C:\\Users\\Anders\\.nuget\\packages\\microsoft.netframework.referenceassemblies\\1.0.2\\microsoft.netframework.referenceassemblies.1.0.2.nupkg.sha512",
+    "C:\\Users\\Anders\\.nuget\\packages\\microsoft.netframework.referenceassemblies.net35\\1.0.2\\microsoft.netframework.referenceassemblies.net35.1.0.2.nupkg.sha512",
+    "C:\\Users\\Anders\\.nuget\\packages\\mono.cecil\\0.10.4\\mono.cecil.0.10.4.nupkg.sha512",
+    "C:\\Users\\Anders\\.nuget\\packages\\monomod.runtimedetour\\21.12.13.1\\monomod.runtimedetour.21.12.13.1.nupkg.sha512",
+    "C:\\Users\\Anders\\.nuget\\packages\\monomod.utils\\21.12.13.1\\monomod.utils.21.12.13.1.nupkg.sha512",
+    "C:\\Users\\Anders\\.nuget\\packages\\supersocket.clientengine.core\\0.10.0\\supersocket.clientengine.core.0.10.0.nupkg.sha512",
+    "C:\\Users\\Anders\\.nuget\\packages\\unityengine.modules\\2017.4.22\\unityengine.modules.2017.4.22.nupkg.sha512",
+    "C:\\Users\\Anders\\.nuget\\packages\\websocket4net\\0.15.2\\websocket4net.0.15.2.nupkg.sha512"
+  ],
+  "logs": []
+}
