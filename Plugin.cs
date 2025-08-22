@@ -1,4 +1,5 @@
-﻿using BepInEx;
+﻿using System.Collections;
+using BepInEx;
 using BepInEx.Logging;
 using UnityEngine;
 using HarmonyLib;
@@ -125,14 +126,30 @@ public class Plugin : BaseUnityPlugin
     /// </summary>
     /// <param name="power">Vibration power (0.0 to 1.0)</param>
     /// <param name="duration">Duration in seconds</param>
-    public static void TriggerVibration(float power, float duration)
+    /// <param name="delayByFrame">Should it delay by 1 frame?</param>
+    public static void TriggerVibration(float power, float duration, bool delayByFrame = false)
     {
+        if (delayByFrame)
+        {
+            instance?.StartCoroutine(TriggerVibrationDelayed(power, duration));
+        }
+        else
+        {
+            instance?.VibrateAllDevices(power, duration);
+        }
+    }
+    private static IEnumerator TriggerVibrationDelayed(float power, float duration)
+    {
+        yield return null; // Wait for one frame
         instance?.VibrateAllDevices(power, duration);
     }
 }
 
+/// <summary>
+/// Vibration when regular wire is cut. WIRE MODULE
+/// </summary>
 [HarmonyPatch(typeof(SnippableWire), "Interact")]
-public class WireSnipHapticPatch
+public class WireSnipVibrationPatch
 {
     [HarmonyPrefix]
     public static void Prefix(SnippableWire __instance, out bool __state)
@@ -152,7 +169,74 @@ public class WireSnipHapticPatch
         
         if (!wasSnippedBeforeInteract && isSnippedAfterInteract)
         {
-            Plugin.TriggerVibration(0.5f, 0.6f);
+            Plugin.TriggerVibration(0.5f, 0.1f);
+        }
+    }
+}
+
+/// <summary>
+/// Vibration when you get a strike.
+/// </summary>
+[HarmonyPatch(typeof(Bomb), "OnStrike")]
+[HarmonyPriority(Priority.Low)]
+public class StrikeVibrationPatch
+{
+    [HarmonyPostfix]
+    public static void Postfix()
+    {
+        
+        Plugin.TriggerVibration(0.7f, 0.5f, true);
+    }
+}
+
+/// <summary>
+/// VIBRATION WHEN BOMB DETONATES
+/// </summary>
+[HarmonyPatch(typeof(Bomb), "Detonate")]
+[HarmonyPriority(Priority.Last)]
+public class ExplosionVibrationPatch
+{
+    [HarmonyPostfix]
+    public static void Postfix()
+    {
+        Plugin.TriggerVibration(1.0f, 3.0f, true);
+    }
+}
+
+/// <summary>
+/// Vibration when Module is Solved
+/// </summary>
+[HarmonyPatch(typeof(Bomb), "OnPass")]
+public class ModuleSolveVibrationPatch
+{
+    [HarmonyPostfix]
+    public static void Postfix()
+    {
+        Plugin.TriggerVibration(1.0f, 0.1f);
+    }
+}
+
+/// <summary>
+/// VIBRATION ON THE BUTTON MODULE
+/// </summary>
+[HarmonyPatch(typeof(PressableButton))]
+public class BigButtonHapticPatch
+{
+
+    [HarmonyPostfix]
+    [HarmonyPatch("Interact")]
+    public static void PressPostfix()
+    {
+        Plugin.TriggerVibration(0.4f, 500.0f);
+    }
+    
+    [HarmonyPrefix]
+    [HarmonyPatch("InteractEnded")]
+    public static void ReleasePrefix(PressableButton __instance)
+    {
+        if (__instance.IsInteracting())
+        {
+            Plugin.TriggerVibration(0.5f, 0.1f);
         }
     }
 }

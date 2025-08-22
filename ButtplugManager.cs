@@ -13,6 +13,9 @@ namespace KeepVibingAndNobodyExplodes
         private ButtplugWsClient client;
         private ManualLogSource logger;
         
+        // Track active vibration coroutines per device to prevent conflicts
+        private Dictionary<string, Coroutine> activeVibrationCoroutines = new Dictionary<string, Coroutine>();
+        
         public bool IsConnected => client != null && client.IsConnected;
         public List<Device> Devices => client?.Devices ?? new List<Device>();
         
@@ -87,7 +90,12 @@ namespace KeepVibingAndNobodyExplodes
             if (duration > 0)
             {
                 // Stop vibration after duration
-                StartCoroutine(StopVibrateAfterDelay(device, duration));
+                if (activeVibrationCoroutines.TryGetValue(deviceName, out var existingCoroutine))
+                {
+                    StopCoroutine(existingCoroutine);
+                }
+                var coroutine = StartCoroutine(StopVibrateAfterDelay(device, duration));
+                activeVibrationCoroutines[deviceName] = coroutine;
             }
         }
 
@@ -116,6 +124,9 @@ namespace KeepVibingAndNobodyExplodes
             {
                 client.VibrateCmd(feature, 0);
             }
+            
+            // Clean up the tracking dictionary
+            activeVibrationCoroutines.Remove(device.DeviceName);
         }
 
         private List<DeviceFeature> GetVibratorFeatures(Device device)
