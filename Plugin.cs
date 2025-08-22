@@ -5,14 +5,13 @@ using HarmonyLib;
 
 namespace KeepVibingAndNobodyExplodes;
 
-[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
+[BepInPlugin("dryicedmatcha.keepvibing", "Keep Vibing And Nobody Explodes", "1.0.0")]
 public class Plugin : BaseUnityPlugin
 {
     internal static new ManualLogSource Logger;
     private ButtplugManager buttplugManager;
     private static Plugin instance;
     
-    // Harmony instance
     private const string harmonyId = "com.yourname.ktane.hapticsmod";
     private static Harmony harmonyInstance;
     
@@ -22,13 +21,10 @@ public class Plugin : BaseUnityPlugin
         Logger = base.Logger;
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
         
-        // Set instance for static access
         instance = this;
         
-        // Initialize Buttplug manager
         InitializeButtplug();
         
-        // Apply Harmony patches
         ApplyHarmonyPatches();
     }
     
@@ -39,22 +35,21 @@ public class Plugin : BaseUnityPlugin
             harmonyInstance = new Harmony(harmonyId);
         }
         
-        // This will find all classes in your assembly with HarmonyPatch attributes and apply them.
         harmonyInstance.PatchAll();
         Logger.LogInfo("Harmony patches applied.");
     }
     
     private void InitializeButtplug()
     {
-        // Create a GameObject to host the ButtplugManager
+        
         var buttplugObject = new GameObject("ButtplugManager");
         DontDestroyOnLoad(buttplugObject);
         
-        // Add and initialize the ButtplugManager
+        
         buttplugManager = buttplugObject.AddComponent<ButtplugManager>();
         buttplugManager.Initialize(Logger);
         
-        // Set up event handlers
+        
         buttplugManager.OnDeviceListUpdated += (sender, args) =>
         {
             Logger.LogInfo($"Devices updated: {args.After.Count} devices connected");
@@ -66,7 +61,7 @@ public class Plugin : BaseUnityPlugin
     
     private void Start()
     {
-        // Auto-connect to Intiface server on start (optional)
+        
         if (buttplugManager != null)
         {
             Logger.LogInfo("Attempting to connect to Intiface server...");
@@ -78,7 +73,7 @@ public class Plugin : BaseUnityPlugin
     {
         if (buttplugManager != null && buttplugManager.IsConnected)
         {
-            // Test vibration on first available device
+            
             var devices = buttplugManager.Devices;
             if (devices.Count > 0)
             {
@@ -136,44 +131,27 @@ public class Plugin : BaseUnityPlugin
     }
 }
 
-/// <summary>
-/// This class contains the patch for the SnippableWire's Interact method.
-/// </summary>
 [HarmonyPatch(typeof(SnippableWire), "Interact")]
 public class WireSnipHapticPatch
 {
-    /// <summary>
-    /// This is the Harmony Prefix. It runs *before* the original Interact method.
-    /// We use it to save the state of the wire before it's cut.
-    /// </summary>
-    /// <param name="__instance">The instance of the SnippableWire being interacted with.</param>
-    /// <param name="__state">A special Harmony parameter to pass data from Prefix to Postfix.</param>
     [HarmonyPrefix]
     public static void Prefix(SnippableWire __instance, out bool __state)
     {
-        // Store the "snipped" status of the wire *before* the Interact method runs.
-        // This will be 'false' if the wire is about to be cut.
         __state = __instance.Snipped;
     }
-
-    /// <summary>
-    /// This is the Harmony Postfix. It runs *after* the original Interact method.
-    /// </summary>
-    /// <param name="__instance">The instance of the SnippableWire that was interacted with.</param>
-    /// <param name="__state">The data we saved in the Prefix method.</param>
+    
     [HarmonyPostfix]
     public static void Postfix(SnippableWire __instance, bool __state)
     {
-        // Retrieve the state from before the method ran.
+        
         bool wasSnippedBeforeInteract = __state;
         
-        // Get the state *after* the method has run.
+        
         bool isSnippedAfterInteract = __instance.Snipped;
 
-        // We only want to fire the haptic if the state changed from not-snipped to snipped.
+        
         if (!wasSnippedBeforeInteract && isSnippedAfterInteract)
         {
-            // Vibrate all devices at 0.5 power for 0.6 seconds when wire is cut
             Plugin.TriggerVibration(0.5f, 0.6f);
         }
     }

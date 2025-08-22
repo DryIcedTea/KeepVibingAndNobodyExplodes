@@ -17,3 +17,4 @@ F:\Github\KeepVibingAndNobodyExplodes\bin\Debug\net35\MonoMod.Core.dll
 F:\Github\KeepVibingAndNobodyExplodes\bin\Debug\net35\MonoMod.Iced.dll
 F:\Github\KeepVibingAndNobodyExplodes\bin\Debug\net35\MonoMod.ILHelpers.dll
 F:\Github\KeepVibingAndNobodyExplodes\bin\Debug\net35\Assembly-CSharp.dll
+F:\Github\KeepVibingAndNobodyExplodes\obj\Debug\net35\KeepVibingAndNobodyExplodes.sourcelink.json
