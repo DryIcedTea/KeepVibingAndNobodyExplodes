@@ -346,3 +346,89 @@ public class WhosOnFirstHapticPatch
         }
     }
 }
+
+/// <summary>
+/// MEMORY MODULE
+/// </summary>
+[HarmonyPatch(typeof(MemoryComponent), "HandleCorrectEntry")]
+public class MemoryComponentHapticPatch
+{
+    private const float DURATION = 0.4f;
+    
+    private static readonly FieldInfo currentStageField = AccessTools.Field(typeof(MemoryComponent), "currentStage");
+    
+    [HarmonyPrefix]
+    public static void Prefix(MemoryComponent __instance)
+    {
+        if (__instance.IsSolved)
+        {
+            return;
+        }
+        
+        int stage = (int)currentStageField.GetValue(__instance);
+        
+        float power = 0.2f + (stage * 0.2f);
+        
+        power = Mathf.Clamp(power, 0.2f, 1.0f);
+
+        Plugin.TriggerVibration(power, DURATION);
+    }
+}
+/// <summary>
+/// MORSE CODE MODULE. Just doin vibes when scrolling through frequencies for now.
+/// </summary>
+public class MorseCodeHapticPatch
+{
+    private const float POWER = 0.2f;
+    private const float DURATION = 0.2f;
+    
+    [HarmonyPatch(typeof(MorseCodeComponent), "OnButtonUpPushed")]
+    [HarmonyPatch(typeof(MorseCodeComponent), "OnButtonDownPushed")]
+    [HarmonyPrefix]
+    public static void Prefix(MorseCodeComponent __instance, out int __state)
+    {
+        __state = __instance.CurrentFrequencyIndex;
+    }
+    
+    [HarmonyPatch(typeof(MorseCodeComponent), "OnButtonUpPushed")]
+    [HarmonyPatch(typeof(MorseCodeComponent), "OnButtonDownPushed")]
+    [HarmonyPostfix]
+    public static void Postfix(MorseCodeComponent __instance, int __state)
+    {
+        int oldIndex = __state;
+        int newIndex = __instance.CurrentFrequencyIndex;
+        
+        if (oldIndex != newIndex)
+        {
+            Plugin.TriggerVibration(POWER, DURATION);
+        }
+    }
+}
+
+/// <summary>
+/// COMPLICATED WIRE MODULE
+/// </summary>
+[HarmonyPatch(typeof(VennSnippableWire), "Interact")]
+public class ComplicatedWireHapticPatch
+{
+    private const float POWER = 0.5f;
+    private const float DURATION = 0.15f;
+    
+    [HarmonyPrefix]
+    public static void Prefix(VennSnippableWire __instance, out bool __state)
+    {
+        __state = __instance.Snipped;
+    }
+    
+    [HarmonyPostfix]
+    public static void Postfix(VennSnippableWire __instance, bool __state)
+    {
+        bool wasSnippedBeforeInteract = __state;
+        bool isSnippedAfterInteract = __instance.Snipped;
+        
+        if (!wasSnippedBeforeInteract && isSnippedAfterInteract)
+        {
+            Plugin.TriggerVibration(POWER, DURATION);
+        }
+    }
+}
