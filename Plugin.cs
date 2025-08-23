@@ -375,8 +375,9 @@ public class MemoryComponentHapticPatch
     }
 }
 /// <summary>
-/// MORSE CODE MODULE. Just doin vibes when scrolling through frequencies for now.
+/// MORSE CODE MODULE
 /// </summary>
+[HarmonyPatch]
 public class MorseCodeHapticPatch
 {
     private const float POWER = 0.2f;
@@ -397,6 +398,7 @@ public class MorseCodeHapticPatch
     {
         int oldIndex = __state;
         int newIndex = __instance.CurrentFrequencyIndex;
+        
         
         if (oldIndex != newIndex)
         {
