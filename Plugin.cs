@@ -561,3 +561,62 @@ public class CapacitorDischargeHapticPatch
         Plugin.TriggerVibration(RELEASE_POWER, RELEASE_DURATION);
     }
 }
+
+/// <summary>
+/// KNOB NEEDY MODULE
+/// </summary>
+[HarmonyPatch]
+public class NeedyKnobHapticPatch
+{
+    private const float POWER = 0.2f;
+    private const float DURATION = 0.2f;
+    
+    [HarmonyPatch(typeof(PointingKnob), "RotateLeft")]
+    [HarmonyPatch(typeof(PointingKnob), "RotateRight")]
+    [HarmonyPostfix]
+    public static void Postfix()
+    {
+        Plugin.TriggerVibration(POWER, DURATION);
+    }
+}
+
+/// <summary>
+/// NEEDY VENTING GAS MODULE
+/// </summary>
+[HarmonyPatch(typeof(NeedyVentComponent), "ButtonDown")]
+public class VentGasHapticPatch
+{
+    private const float POWER = 0.5f;
+    private const float DURATION = 0.5f;
+    
+    private static readonly FieldInfo displayChangingField = AccessTools.Field(typeof(NeedyVentComponent), "displayChanging");
+    
+    [HarmonyPrefix]
+    public static void Prefix(NeedyVentComponent __instance, int index)
+    {
+        // Do nothing if needy is not active.
+        bool isDisplayChanging = (bool)displayChangingField.GetValue(__instance);
+        if (__instance.State != NeedyComponent.NeedyStateEnum.Running || isDisplayChanging)
+        {
+            return;
+        }
+        
+        bool isCorrectPress = false;
+
+        // Index 0 is the "Yes" button.
+        if (index == 0 && __instance.Question == NeedyVentComponent.QuestionEnum.VENT)
+        {
+            isCorrectPress = true;
+        }
+        // Index 1 is the "No" button.
+        else if (index == 1 && __instance.Question == NeedyVentComponent.QuestionEnum.DETONATE)
+        {
+            isCorrectPress = true;
+        }
+        
+        if (isCorrectPress)
+        {
+            Plugin.TriggerVibration(POWER, DURATION);
+        }
+    }
+}
