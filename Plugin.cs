@@ -1,7 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using Assets.Scripts.Props;
+using DarkTonic.MasterAudio;
 using BepInEx;
 using BepInEx.Logging;
 using UnityEngine;
@@ -617,6 +621,101 @@ public class VentGasHapticPatch
         if (isCorrectPress)
         {
             Plugin.TriggerVibration(POWER, DURATION);
+        }
+    }
+}
+
+///
+/// MISC STUFF HERE
+///
+
+
+/// <summary>
+/// ALARM CLOCK VIBRATIONS
+/// </summary>
+public class AlarmClockHapticController : MonoBehaviour
+{
+    private const float POWER = 1.0f;
+    
+    private const float BEEP_VIBRATION_DURATION = 0.2f;
+    private const float PAUSE_DURATION = 0.1f;
+    
+    private const float TOTAL_CYCLE_INTERVAL = BEEP_VIBRATION_DURATION + PAUSE_DURATION;
+
+    private Coroutine hapticLoopCoroutine;
+    private FieldInfo isOnField;
+    private AlarmClock alarmClockInstance;
+
+    public void Initialize(AlarmClock alarmClock)
+    {
+        alarmClockInstance = alarmClock;
+        isOnField = AccessTools.Field(typeof(AlarmClock), "isOn");
+        if (isOnField == null)
+        {
+            Plugin.Logger.LogError("[Haptics] CRITICAL: Could not find the 'isOn' field via reflection on AlarmClock!");
+        }
+    }
+
+    public void StartHapticLoop()
+    {
+        if (hapticLoopCoroutine != null) StopCoroutine(hapticLoopCoroutine);
+        hapticLoopCoroutine = StartCoroutine(HapticLoop());
+    }
+
+    public void StopHapticLoop()
+    {
+        if (hapticLoopCoroutine != null) StopCoroutine(hapticLoopCoroutine);
+        hapticLoopCoroutine = null;
+    }
+
+    private IEnumerator HapticLoop()
+    {
+        yield return new WaitForSeconds(0.1f);
+        if (isOnField == null) yield break;
+
+
+        while ((bool)isOnField.GetValue(alarmClockInstance))
+        {
+            Plugin.TriggerVibration(POWER, BEEP_VIBRATION_DURATION);
+            
+            yield return new WaitForSeconds(TOTAL_CYCLE_INTERVAL);
+        }
+    }
+}
+
+
+[HarmonyPatch(typeof(Assets.Scripts.Props.AlarmClock))] 
+public class AlarmClockHapticPatch
+{
+
+    [HarmonyPatch("Start")]
+    [HarmonyPostfix]
+    public static void StartPostfix(Assets.Scripts.Props.AlarmClock __instance)
+    {
+        var controller = __instance.gameObject.AddComponent<AlarmClockHapticController>();
+        controller.Initialize(__instance);
+    }
+
+
+    [HarmonyPatch("TurnOn")]
+    [HarmonyPostfix]
+    public static void TurnOnPostfix(Assets.Scripts.Props.AlarmClock __instance)
+    {
+        var hapticController = __instance.GetComponent<AlarmClockHapticController>();
+        if (hapticController != null)
+        {
+            hapticController.StartHapticLoop();
+        }
+    }
+    
+    [HarmonyPatch("TurnOff")]
+    [HarmonyPostfix]
+    public static void TurnOffPostfix(Assets.Scripts.Props.AlarmClock __instance)
+    {
+        var hapticController = __instance.GetComponent<AlarmClockHapticController>();
+        if (hapticController != null)
+        {
+            hapticController.StopHapticLoop();
         }
     }
 }
