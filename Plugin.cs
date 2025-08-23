@@ -530,3 +530,34 @@ public class PasswordSpinnerHapticPatch
         Plugin.TriggerVibration(POWER, DURATION);
     }
 }
+
+///
+///NEEDY MODULES HERE
+///
+
+/// <summary>
+/// CAPACITOR DISCHARGE NEEDY MODULE VENT MODULE
+/// </summary>
+[HarmonyPatch]
+public class CapacitorDischargeHapticPatch
+{
+    private const float PUSH_POWER = 0.7f;
+    private const float PUSH_DURATION = 500.0f; 
+    
+    private const float RELEASE_POWER = 0.1f;
+    private const float RELEASE_DURATION = 0.1f;
+    
+    [HarmonyPatch(typeof(NeedyDischargeComponent), "OnPush")]
+    [HarmonyPostfix]
+    public static void PushPostfix()
+    {
+        Plugin.TriggerVibration(PUSH_POWER, PUSH_DURATION);
+    }
+    
+    [HarmonyPatch(typeof(NeedyDischargeComponent), "OnRelease")]
+    [HarmonyPostfix]
+    public static void ReleasePostfix()
+    {
+        Plugin.TriggerVibration(RELEASE_POWER, RELEASE_DURATION);
+    }
+}

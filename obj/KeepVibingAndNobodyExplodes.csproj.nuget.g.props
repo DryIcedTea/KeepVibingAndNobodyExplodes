@@ -17,6 +17,7 @@
     <Import Project="$(NuGetPackageRoot)bepinex.plugininfoprops\2.1.0\build\BepInEx.PluginInfoProps.props" Condition="Exists('$(NuGetPackageRoot)bepinex.plugininfoprops\2.1.0\build\BepInEx.PluginInfoProps.props')" />
   </ImportGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <PkgNewtonsoft_Json Condition=" '$(PkgNewtonsoft_Json)' == '' ">C:\Users\Anders\.nuget\packages\newtonsoft.json\10.0.3</PkgNewtonsoft_Json>
     <PkgBepInEx_Core Condition=" '$(PkgBepInEx_Core)' == '' ">C:\Users\Anders\.nuget\packages\bepinex.core\5.4.21</PkgBepInEx_Core>
     <PkgBepInEx_Analyzers Condition=" '$(PkgBepInEx_Analyzers)' == '' ">C:\Users\Anders\.nuget\packages\bepinex.analyzers\1.0.8</PkgBepInEx_Analyzers>
   </PropertyGroup>
