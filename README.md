@@ -31,7 +31,7 @@ The plugin supports vibration feedback for all vanilla Keep Talking and Nobody E
 - **Capacitor Discharge**: Different vibrations for push/release actions
 - **Knob**: Rotation feedback
 - **Venting Gas**: Pressure release vibrations
-- **Alarm Clock**: Clock interaction feedback
+- **Alarm Clock**: Vibration when alarm is buzzing
 
 ## Installation
 
