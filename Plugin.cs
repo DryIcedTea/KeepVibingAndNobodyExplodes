@@ -154,7 +154,7 @@ public class Plugin : BaseUnityPlugin
         enableWireVibration = Config.Bind("Wire", 
                                      "EnableVibration", 
                                      true, 
-                                     "Enable or disable haptic feedback/vibrations for the Wire module");
+                                     "Enable or disable vibrations for the Wire module");
         
         wireVibrationStrength = Config.Bind("Wire", 
                                                  "VibrationStrength", 
@@ -164,7 +164,7 @@ public class Plugin : BaseUnityPlugin
         enableStrikeVibration = Config.Bind("General", 
                                      "EnableStrikeVibration", 
                                      true, 
-                                     "Enable or disable haptic feedback/vibrations when the bomb receives a strike");
+                                     "Enable or disable vibrations when the bomb receives a strike");
         
         strikeVibrationStrength = Config.Bind("General", 
                                                  "StrikeVibrationStrength", 
@@ -174,7 +174,7 @@ public class Plugin : BaseUnityPlugin
         enableExplosionVibration = Config.Bind("General", 
                                      "EnableExplosionVibration", 
                                      true, 
-                                     "Enable or disable haptic feedback/vibrations when the bomb explodes");
+                                     "Enable or disable vibrations when the bomb explodes");
         
         explosionVibrationStrength = Config.Bind("General", 
                                                  "ExplosionVibrationStrength", 
@@ -184,7 +184,7 @@ public class Plugin : BaseUnityPlugin
         enableModuleSolveVibration = Config.Bind("General", 
                                      "EnableModuleSolveVibration", 
                                      true, 
-                                     "Enable or disable haptic feedback/vibrations when a module is solved");
+                                     "Enable or disable vibrations when a module is solved");
         
         moduleSolveVibrationStrength = Config.Bind("General", 
                                                  "ModuleSolveVibrationStrength", 
@@ -194,7 +194,7 @@ public class Plugin : BaseUnityPlugin
         enableButtonVibration = Config.Bind("Button", 
                                      "EnableVibration", 
                                      true, 
-                                     "Enable or disable haptic feedback/vibrations for button presses");
+                                     "Enable or disable vibrations for button presses");
         
         buttonPressVibrationStrength = Config.Bind("Button", 
                                                  "PressVibrationStrength", 
@@ -209,7 +209,7 @@ public class Plugin : BaseUnityPlugin
         enableKeypadVibration = Config.Bind("Keypad", 
                                      "EnableVibration", 
                                      true, 
-                                     "Enable or disable haptic feedback/vibrations for the Keypad module");
+                                     "Enable or disable vibrations for the Keypad module");
         
         keypadVibrationBaseStrength = Config.Bind("Keypad", 
                                                  "VibrationBaseStrength", 
@@ -219,7 +219,7 @@ public class Plugin : BaseUnityPlugin
         enableSimonVibration = Config.Bind("Simon", 
                                      "EnableVibration", 
                                      true, 
-                                     "Enable or disable haptic feedback/vibrations for the Simon Says module");
+                                     "Enable or disable vibrations for the Simon Says module");
         
         simonVibrationBaseStrength = Config.Bind("Simon", 
                                                  "VibrationBaseStrength", 
@@ -229,7 +229,7 @@ public class Plugin : BaseUnityPlugin
         enableWhosOnFirstVibration = Config.Bind("WhosOnFirst", 
                                      "EnableVibration", 
                                      true, 
-                                     "Enable or disable haptic feedback/vibrations for the Who's On First module");
+                                     "Enable or disable vibrations for the Who's On First module");
         
         whosOnFirstVibrationBaseStrength = Config.Bind("WhosOnFirst", 
                                                  "VibrationBaseStrength", 
@@ -239,7 +239,7 @@ public class Plugin : BaseUnityPlugin
         enableMemoryVibration = Config.Bind("Memory", 
                                      "EnableVibration", 
                                      true, 
-                                     "Enable or disable haptic feedback/vibrations for the Memory module");
+                                     "Enable or disable vibrations for the Memory module");
         
         memoryVibrationBaseStrength = Config.Bind("Memory", 
                                                  "VibrationBaseStrength", 
@@ -249,7 +249,7 @@ public class Plugin : BaseUnityPlugin
         enableMorseVibration = Config.Bind("Morse", 
                                      "EnableVibration", 
                                      true, 
-                                     "Enable or disable haptic feedback/vibrations for the Morse Code module");
+                                     "Enable or disable vibrations for the Morse Code module");
         
         morseVibrationStrength = Config.Bind("Morse", 
                                                  "VibrationStrength", 
@@ -259,7 +259,7 @@ public class Plugin : BaseUnityPlugin
         enableComplicatedWireVibration = Config.Bind("ComplicatedWire", 
                                      "EnableVibration", 
                                      true, 
-                                     "Enable or disable haptic feedback/vibrations for the Complicated Wire module");
+                                     "Enable or disable vibrations for the Complicated Wire module");
         
         complicatedWireVibrationStrength = Config.Bind("ComplicatedWire", 
                                                  "VibrationStrength", 
@@ -269,7 +269,7 @@ public class Plugin : BaseUnityPlugin
         enableWireSequenceVibration = Config.Bind("WireSequence", 
                                      "EnableVibration", 
                                      true, 
-                                     "Enable or disable haptic feedback/vibrations for the Wire Sequence module");
+                                     "Enable or disable vibrations for the Wire Sequence module");
         
         wireSequenceWireVibrationStrength = Config.Bind("WireSequence", 
                                                  "WireVibrationStrength", 
@@ -284,7 +284,7 @@ public class Plugin : BaseUnityPlugin
         enableMazeVibration = Config.Bind("Maze", 
                                      "EnableVibration", 
                                      true, 
-                                     "Enable or disable haptic feedback/vibrations for the Maze module");
+                                     "Enable or disable vibrations for the Maze module");
         
         mazeVibrationStrength = Config.Bind("Maze", 
                                                  "VibrationStrength", 
@@ -294,7 +294,7 @@ public class Plugin : BaseUnityPlugin
         enablePasswordVibration = Config.Bind("Password", 
                                      "EnableVibration", 
                                      true, 
-                                     "Enable or disable haptic feedback/vibrations for the Password module");
+                                     "Enable or disable vibrations for the Password module");
         
         passwordVibrationStrength = Config.Bind("Password", 
                                                  "VibrationStrength", 
@@ -304,7 +304,7 @@ public class Plugin : BaseUnityPlugin
         enableCapacitorDischargeVibration = Config.Bind("CapacitorDischarge", 
                                      "EnableVibration", 
                                      true, 
-                                     "Enable or disable haptic feedback/vibrations for the Capacitor Discharge module");
+                                     "Enable or disable vibrations for the Capacitor Discharge module");
         
         capacitorDischargePushVibrationStrength = Config.Bind("CapacitorDischarge", 
                                                  "PushVibrationStrength", 
@@ -319,7 +319,7 @@ public class Plugin : BaseUnityPlugin
         enableNeedyKnobVibration = Config.Bind("NeedyKnob", 
                                      "EnableVibration", 
                                      true, 
-                                     "Enable or disable haptic feedback/vibrations for the Needy Knob module");
+                                     "Enable or disable vibrations for the Needy Knob module");
         
         needyKnobVibrationStrength = Config.Bind("NeedyKnob", 
                                                  "VibrationStrength", 
@@ -329,7 +329,7 @@ public class Plugin : BaseUnityPlugin
         enableVentGasVibration = Config.Bind("VentGas", 
                                      "EnableVibration", 
                                      true, 
-                                     "Enable or disable haptic feedback/vibrations for the Venting Gas module");
+                                     "Enable or disable vibrations for the Venting Gas module");
         
         ventGasVibrationStrength = Config.Bind("VentGas", 
                                                  "VibrationStrength", 
@@ -339,7 +339,7 @@ public class Plugin : BaseUnityPlugin
         enableAlarmClockVibration = Config.Bind("AlarmClock", 
                                      "EnableVibration", 
                                      true, 
-                                     "Enable or disable haptic feedback/vibrations for the Alarm Clock module");
+                                     "Enable or disable vibrations for the Alarm Clock module");
         
         alarmClockVibrationStrength = Config.Bind("AlarmClock", 
                                                  "VibrationStrength", 
