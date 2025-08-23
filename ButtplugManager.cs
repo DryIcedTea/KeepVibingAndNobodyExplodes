@@ -13,7 +13,7 @@ namespace KeepVibingAndNobodyExplodes
         private ButtplugWsClient client;
         private ManualLogSource logger;
         
-        private Dictionary<string, Coroutine> activeVibrationCoroutines = new Dictionary<string, Coroutine>();
+        private Dictionary<int, Coroutine> activeVibrationCoroutines = new Dictionary<int, Coroutine>();
         
         public bool IsConnected => client != null && client.IsConnected;
         public List<Device> Devices => client?.Devices ?? new List<Device>();
@@ -80,6 +80,9 @@ namespace KeepVibingAndNobodyExplodes
                 return;
             }
 
+            // Find the list index for this device
+            int listIndex = Devices.IndexOf(device);
+            
             var vibratorFeatures = GetVibratorFeatures(device);
             foreach (var feature in vibratorFeatures)
             {
@@ -88,13 +91,42 @@ namespace KeepVibingAndNobodyExplodes
 
             if (duration > 0)
             {
-                // Stop vibration after duration
-                if (activeVibrationCoroutines.TryGetValue(deviceName, out var existingCoroutine))
+                // Stop vibration after duration using list index
+                if (activeVibrationCoroutines.TryGetValue(listIndex, out var existingCoroutine))
                 {
                     StopCoroutine(existingCoroutine);
                 }
-                var coroutine = StartCoroutine(StopVibrateAfterDelay(device, duration));
-                activeVibrationCoroutines[deviceName] = coroutine;
+                var coroutine = StartCoroutine(StopVibrateAfterDelay(listIndex, duration));
+                activeVibrationCoroutines[listIndex] = coroutine;
+            }
+        }
+
+        public void VibrateDeviceByIndex(int deviceIndex, float intensity, float duration = 0)
+        {
+            if (deviceIndex < 0 || deviceIndex >= Devices.Count)
+            {
+                logger.LogWarning($"Device index out of range: {deviceIndex}. Available devices: {Devices.Count}");
+                return;
+            }
+
+            var device = Devices[deviceIndex];
+            logger.LogInfo($"Vibrating device {deviceIndex}: {device.DeviceName}");
+
+            var vibratorFeatures = GetVibratorFeatures(device);
+            foreach (var feature in vibratorFeatures)
+            {
+                client.VibrateCmd(feature, intensity);
+            }
+
+            if (duration > 0)
+            {
+                // Stop vibration after duration using list index (deviceIndex)
+                if (activeVibrationCoroutines.TryGetValue(deviceIndex, out var existingCoroutine))
+                {
+                    StopCoroutine(existingCoroutine);
+                }
+                var coroutine = StartCoroutine(StopVibrateAfterDelay(deviceIndex, duration));
+                activeVibrationCoroutines[deviceIndex] = coroutine;
             }
         }
 
@@ -114,18 +146,41 @@ namespace KeepVibingAndNobodyExplodes
             }
         }
 
-        private System.Collections.IEnumerator StopVibrateAfterDelay(Device device, float delay)
+        public void StrokeDeviceByIndex(int deviceIndex, float position, float duration)
+        {
+            if (deviceIndex < 0 || deviceIndex >= Devices.Count)
+            {
+                logger.LogWarning($"Device index out of range: {deviceIndex}. Available devices: {Devices.Count}");
+                return;
+            }
+
+            var device = Devices[deviceIndex];
+            logger.LogInfo($"Stroking device {deviceIndex}: {device.DeviceName}");
+
+            var strokerFeatures = GetStrokerFeatures(device);
+            foreach (var feature in strokerFeatures)
+            {
+                client.LinearCmd(feature, position, duration);
+            }
+        }
+
+        private System.Collections.IEnumerator StopVibrateAfterDelay(int deviceListIndex, float delay)
         {
             yield return new WaitForSeconds(delay);
             
-            var vibratorFeatures = GetVibratorFeatures(device);
-            foreach (var feature in vibratorFeatures)
+            // Verify the device still exists at this index
+            if (deviceListIndex >= 0 && deviceListIndex < Devices.Count)
             {
-                client.VibrateCmd(feature, 0);
+                var device = Devices[deviceListIndex];
+                var vibratorFeatures = GetVibratorFeatures(device);
+                foreach (var feature in vibratorFeatures)
+                {
+                    client.VibrateCmd(feature, 0);
+                }
             }
             
-            // Clean up the tracking dictionary
-            activeVibrationCoroutines.Remove(device.DeviceName);
+            // Clean up the tracking dictionary using list index
+            activeVibrationCoroutines.Remove(deviceListIndex);
         }
 
         private List<DeviceFeature> GetVibratorFeatures(Device device)
@@ -168,9 +223,10 @@ namespace KeepVibingAndNobodyExplodes
             }
 
             logger.LogInfo($"Connected devices: {Devices.Count}");
-            foreach (var device in Devices)
+            for (int i = 0; i < Devices.Count; i++)
             {
-                logger.LogInfo($"  Device: {device.DeviceName} (Index: {device.DeviceIndex})");
+                var device = Devices[i];
+                logger.LogInfo($"  Device {i}: {device.DeviceName} (DeviceIndex: {device.DeviceIndex})");
                 logger.LogInfo($"    Vibrators: {device.DeviceMessages.ScalarCmd.Count(f => f.IsVibrator)}");
                 logger.LogInfo($"    Strokers: {device.DeviceMessages.LinearCmd.Length}");
                 logger.LogInfo($"    Rotators: {device.DeviceMessages.RotateCmd.Length}");

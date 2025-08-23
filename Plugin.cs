@@ -58,7 +58,8 @@ public class Plugin : BaseUnityPlugin
     private ConfigEntry<float> memoryVibrationBaseStrength;
     
     private ConfigEntry<bool> enableMorseVibration;
-    private ConfigEntry<float> morseVibrationStrength;
+    private ConfigEntry<float> morseBlinkVibrationStrength;
+    private ConfigEntry<float> morseScrollVibrationStrength;
     
     private ConfigEntry<bool> enableComplicatedWireVibration;
     private ConfigEntry<float> complicatedWireVibrationStrength;
@@ -116,7 +117,8 @@ public class Plugin : BaseUnityPlugin
     public static float MemoryVibrationBaseStrength => instance?.memoryVibrationBaseStrength?.Value ?? 0.2f;
     
     public static bool EnableMorseVibration => instance?.enableMorseVibration?.Value ?? true;
-    public static float MorseVibrationStrength => instance?.morseVibrationStrength?.Value ?? 0.2f;
+    public static float MorseBlinkVibrationStrength => instance?.morseBlinkVibrationStrength?.Value ?? 0.4f;
+    public static float MorseScrollVibrationStrength => instance?.morseScrollVibrationStrength?.Value ?? 0.2f;
     
     public static bool EnableComplicatedWireVibration => instance?.enableComplicatedWireVibration?.Value ?? true;
     public static float ComplicatedWireVibrationStrength => instance?.complicatedWireVibrationStrength?.Value ?? 0.5f;
@@ -251,10 +253,15 @@ public class Plugin : BaseUnityPlugin
                                      true, 
                                      "Enable or disable vibrations for the Morse Code module");
         
-        morseVibrationStrength = Config.Bind("Morse", 
-                                                 "VibrationStrength", 
+        morseBlinkVibrationStrength = Config.Bind("Morse", 
+                                                 "BlinkVibrationStrength", 
+                                                 0.4f, 
+                                                 "Strength of the vibration for the Morse Code module when the light blinks (0.1 = 10% strength, 1.0 = 100% strength)" );
+        
+        morseScrollVibrationStrength = Config.Bind("Morse", 
+                                                 "ScrollVibrationStrength", 
                                                  0.2f, 
-                                                 "Strength of the vibration for the Morse Code module (0.1 = 10% strength, 1.0 = 100% strength)" );
+                                                 "Strength of the vibration for scrolling through frequencies in the Morse Code module (0.1 = 10% strength, 1.0 = 100% strength)" );
         
         enableComplicatedWireVibration = Config.Bind("ComplicatedWire", 
                                      "EnableVibration", 
@@ -417,7 +424,7 @@ public class Plugin : BaseUnityPlugin
             if (devices.Count > 0)
             {
                 Logger.LogInfo("Testing vibration for 2 seconds...");
-                buttplugManager.VibrateDevice(devices[0].DeviceName, 0.5f, 2.0f);
+                buttplugManager.VibrateDeviceByIndex(0, 0.5f, 2.0f);
             }
             else
             {
@@ -446,9 +453,9 @@ public class Plugin : BaseUnityPlugin
             if (devices.Count > 0)
             {
                 Logger.LogInfo($"Vibrating {devices.Count} devices at {clampedPower} power for {duration} seconds");
-                foreach (var device in devices)
+                for (int i = 0; i < devices.Count; i++)
                 {
-                    buttplugManager.VibrateDevice(device.DeviceName, clampedPower, duration);
+                    buttplugManager.VibrateDeviceByIndex(i, clampedPower, duration);
                 }
             }
             else
@@ -491,6 +498,7 @@ public class Plugin : BaseUnityPlugin
 }
 
 /// <summary>
+///
 /// Vibration when regular wire is cut. WIRE MODULE
 /// </summary>
 [HarmonyPatch(typeof(SnippableWire), "Interact")]
@@ -723,9 +731,10 @@ public class MemoryComponentHapticPatch
 }
 /// <summary>
 /// MORSE CODE MODULE
+/// PATCH 1 OF 2: Handles the vibrations for scrolling through frequencies.
 /// </summary>
 [HarmonyPatch]
-public class MorseCodeHapticPatch
+public class MorseCodeScrollHapticPatch
 {
     private const float DURATION = 0.2f;
     
@@ -749,7 +758,47 @@ public class MorseCodeHapticPatch
         
         if (oldIndex != newIndex)
         {
-            Plugin.TriggerVibration(Plugin.MorseVibrationStrength, DURATION);
+            Plugin.TriggerVibration(Plugin.MorseScrollVibrationStrength, DURATION);
+        }
+    }
+}
+
+/// <summary>
+/// MORSE CODE MODULE
+/// PATCH 2: Vibrations on the blinking light.
+/// </summary>
+[HarmonyPatch(typeof(MorseCodeComponent), "SetLED")]
+public class MorseCodeBlinkHapticPatch
+{
+    private const float BLINK_START_DURATION = 3.0f; 
+    
+    private const float BLINK_STOP_DURATION = 0.05f; 
+
+    private static readonly FieldInfo isFocusedField = AccessTools.Field(typeof(BombComponent), "isFocused");
+    
+    [HarmonyPrefix]
+    public static void Prefix(MorseCodeComponent __instance, object state)
+    {
+        if (!Plugin.EnableMorseVibration) return;
+        
+        if (isFocusedField == null) return;
+        
+        bool isModuleFocused = (bool)isFocusedField.GetValue(__instance);
+        if (!isModuleFocused)
+        {
+            return;
+        }
+
+        int stateValue = (int)state;
+        
+        if (stateValue == 0)
+        {
+
+            Plugin.TriggerVibration(Plugin.MorseBlinkVibrationStrength, BLINK_START_DURATION);
+        }
+        else 
+        {
+            Plugin.TriggerVibration(Plugin.MorseBlinkVibrationStrength, BLINK_STOP_DURATION);
         }
     }
 }
