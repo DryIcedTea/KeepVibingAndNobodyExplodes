@@ -37,7 +37,7 @@ namespace KeepVibingAndNobodyExplodes
         {
             if (client != null)
             {
-                client.Connect();
+                client.Connect(Plugin.IntifaceHost, Plugin.IntifacePort);
             }
         }
 

@@ -88,6 +88,15 @@ namespace KeepVibingAndNobodyExplodes.Buttplug
 
         public void Open()
         {
+            Connect(WebSocketHost, WebSocketPort);
+        }
+
+        public void Connect(string host, int port)
+        {
+            
+            WebSocketHost = host.StartsWith("ws://") ? host : "ws://" + host;
+            WebSocketPort = port;
+            
             IsConnected = false;
             Devices = new List<Device>();
             incoming = new MessageQueue();

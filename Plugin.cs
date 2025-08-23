@@ -7,6 +7,7 @@ using System.Reflection.Emit;
 using Assets.Scripts.Props;
 using DarkTonic.MasterAudio;
 using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using UnityEngine;
 using HarmonyLib;
@@ -20,11 +21,341 @@ public class Plugin : BaseUnityPlugin
     private ButtplugManager buttplugManager;
     private static Plugin instance;
     
-    private const string harmonyId = "com.dryicedmatcha.ktane.hapticsmod";
+    private const string harmonyId = "com.dryicedmatcha.ktane.keepvibing";
     private static Harmony harmonyInstance;
+    
+    // Configuration entries - individual module controls
+    private ConfigEntry<bool> enableWireVibration;
+    private ConfigEntry<float> wireVibrationStrength;
+    
+    // Intiface connection settings
+    private ConfigEntry<string> intifaceHost;
+    private ConfigEntry<int> intifacePort;
+    
+    private ConfigEntry<bool> enableStrikeVibration;
+    private ConfigEntry<float> strikeVibrationStrength;
+    
+    private ConfigEntry<bool> enableExplosionVibration;
+    private ConfigEntry<float> explosionVibrationStrength;
+    
+    private ConfigEntry<bool> enableModuleSolveVibration;
+    private ConfigEntry<float> moduleSolveVibrationStrength;
+    
+    private ConfigEntry<bool> enableButtonVibration;
+    private ConfigEntry<float> buttonPressVibrationStrength;
+    private ConfigEntry<float> buttonReleaseVibrationStrength;
+    
+    private ConfigEntry<bool> enableKeypadVibration;
+    private ConfigEntry<float> keypadVibrationBaseStrength;
+    
+    private ConfigEntry<bool> enableSimonVibration;
+    private ConfigEntry<float> simonVibrationBaseStrength;
+    
+    private ConfigEntry<bool> enableWhosOnFirstVibration;
+    private ConfigEntry<float> whosOnFirstVibrationBaseStrength;
+    
+    private ConfigEntry<bool> enableMemoryVibration;
+    private ConfigEntry<float> memoryVibrationBaseStrength;
+    
+    private ConfigEntry<bool> enableMorseVibration;
+    private ConfigEntry<float> morseVibrationStrength;
+    
+    private ConfigEntry<bool> enableComplicatedWireVibration;
+    private ConfigEntry<float> complicatedWireVibrationStrength;
+    
+    private ConfigEntry<bool> enableWireSequenceVibration;
+    private ConfigEntry<float> wireSequenceWireVibrationStrength;
+    private ConfigEntry<float> wireSequenceStageVibrationBaseStrength;
+    
+    private ConfigEntry<bool> enableMazeVibration;
+    private ConfigEntry<float> mazeVibrationStrength;
+    
+    private ConfigEntry<bool> enablePasswordVibration;
+    private ConfigEntry<float> passwordVibrationStrength;
+    
+    private ConfigEntry<bool> enableCapacitorDischargeVibration;
+    private ConfigEntry<float> capacitorDischargePushVibrationStrength;
+    private ConfigEntry<float> capacitorDischargeReleaseVibrationStrength;
+    
+    private ConfigEntry<bool> enableNeedyKnobVibration;
+    private ConfigEntry<float> needyKnobVibrationStrength;
+    
+    private ConfigEntry<bool> enableVentGasVibration;
+    private ConfigEntry<float> ventGasVibrationStrength;
+    
+    private ConfigEntry<bool> enableAlarmClockVibration;
+    private ConfigEntry<float> alarmClockVibrationStrength;
+    
+    // Module-specific accessors
+    public static bool EnableWireVibration => instance?.enableWireVibration?.Value ?? true;
+    public static float WireVibrationStrength => instance?.wireVibrationStrength?.Value ?? 0.5f;
+    
+    public static bool EnableStrikeVibration => instance?.enableStrikeVibration?.Value ?? true;
+    public static float StrikeVibrationStrength => instance?.strikeVibrationStrength?.Value ?? 0.7f;
+    
+    public static bool EnableExplosionVibration => instance?.enableExplosionVibration?.Value ?? true;
+    public static float ExplosionVibrationStrength => instance?.explosionVibrationStrength?.Value ?? 1.0f;
+    
+    public static bool EnableModuleSolveVibration => instance?.enableModuleSolveVibration?.Value ?? true;
+    public static float ModuleSolveVibrationStrength => instance?.moduleSolveVibrationStrength?.Value ?? 1.0f;
+    
+    public static bool EnableButtonVibration => instance?.enableButtonVibration?.Value ?? true;
+    public static float ButtonPressVibrationStrength => instance?.buttonPressVibrationStrength?.Value ?? 0.4f;
+    public static float ButtonReleaseVibrationStrength => instance?.buttonReleaseVibrationStrength?.Value ?? 0.5f;
+    
+    public static bool EnableKeypadVibration => instance?.enableKeypadVibration?.Value ?? true;
+    public static float KeypadVibrationBaseStrength => instance?.keypadVibrationBaseStrength?.Value ?? 0.25f;
+    
+    public static bool EnableSimonVibration => instance?.enableSimonVibration?.Value ?? true;
+    public static float SimonVibrationBaseStrength => instance?.simonVibrationBaseStrength?.Value ?? 0.2f;
+    
+    public static bool EnableWhosOnFirstVibration => instance?.enableWhosOnFirstVibration?.Value ?? true;
+    public static float WhosOnFirstVibrationBaseStrength => instance?.whosOnFirstVibrationBaseStrength?.Value ?? 0.25f;
+    
+    public static bool EnableMemoryVibration => instance?.enableMemoryVibration?.Value ?? true;
+    public static float MemoryVibrationBaseStrength => instance?.memoryVibrationBaseStrength?.Value ?? 0.2f;
+    
+    public static bool EnableMorseVibration => instance?.enableMorseVibration?.Value ?? true;
+    public static float MorseVibrationStrength => instance?.morseVibrationStrength?.Value ?? 0.2f;
+    
+    public static bool EnableComplicatedWireVibration => instance?.enableComplicatedWireVibration?.Value ?? true;
+    public static float ComplicatedWireVibrationStrength => instance?.complicatedWireVibrationStrength?.Value ?? 0.5f;
+    
+    public static bool EnableWireSequenceVibration => instance?.enableWireSequenceVibration?.Value ?? true;
+    public static float WireSequenceWireVibrationStrength => instance?.wireSequenceWireVibrationStrength?.Value ?? 0.5f;
+    public static float WireSequenceStageVibrationBaseStrength => instance?.wireSequenceStageVibrationBaseStrength?.Value ?? 0.2f;
+    
+    public static bool EnableMazeVibration => instance?.enableMazeVibration?.Value ?? true;
+    public static float MazeVibrationStrength => instance?.mazeVibrationStrength?.Value ?? 0.3f;
+    
+    public static bool EnablePasswordVibration => instance?.enablePasswordVibration?.Value ?? true;
+    public static float PasswordVibrationStrength => instance?.passwordVibrationStrength?.Value ?? 0.3f;
+    
+    public static bool EnableCapacitorDischargeVibration => instance?.enableCapacitorDischargeVibration?.Value ?? true;
+    public static float CapacitorDischargePushVibrationStrength => instance?.capacitorDischargePushVibrationStrength?.Value ?? 0.7f;
+    public static float CapacitorDischargeReleaseVibrationStrength => instance?.capacitorDischargeReleaseVibrationStrength?.Value ?? 0.1f;
+    
+    public static bool EnableNeedyKnobVibration => instance?.enableNeedyKnobVibration?.Value ?? true;
+    public static float NeedyKnobVibrationStrength => instance?.needyKnobVibrationStrength?.Value ?? 0.2f;
+    
+    public static bool EnableVentGasVibration => instance?.enableVentGasVibration?.Value ?? true;
+    public static float VentGasVibrationStrength => instance?.ventGasVibrationStrength?.Value ?? 0.5f;
+    
+    public static bool EnableAlarmClockVibration => instance?.enableAlarmClockVibration?.Value ?? true;
+    public static float AlarmClockVibrationStrength => instance?.alarmClockVibrationStrength?.Value ?? 1.0f;
+    
+    // Intiface connection accessors
+    public static string IntifaceHost => instance?.intifaceHost?.Value ?? "127.0.0.1";
+    public static int IntifacePort => instance?.intifacePort?.Value ?? 12345;
     
     private void Awake()
     {
+        // Initialize configuration
+        enableWireVibration = Config.Bind("Wire", 
+                                     "EnableVibration", 
+                                     true, 
+                                     "Enable or disable haptic feedback/vibrations for the Wire module");
+        
+        wireVibrationStrength = Config.Bind("Wire", 
+                                                 "VibrationStrength", 
+                                                 0.5f, 
+                                                 "Strength of the vibration for the Wire module (0.1 = 10% strength, 1.0 = 100% strength)" );
+        
+        enableStrikeVibration = Config.Bind("General", 
+                                     "EnableStrikeVibration", 
+                                     true, 
+                                     "Enable or disable haptic feedback/vibrations when the bomb receives a strike");
+        
+        strikeVibrationStrength = Config.Bind("General", 
+                                                 "StrikeVibrationStrength", 
+                                                 0.7f, 
+                                                 "Strength of the vibration when the bomb receives a strike (0.1 = 10% strength, 1.0 = 100% strength)" );
+        
+        enableExplosionVibration = Config.Bind("General", 
+                                     "EnableExplosionVibration", 
+                                     true, 
+                                     "Enable or disable haptic feedback/vibrations when the bomb explodes");
+        
+        explosionVibrationStrength = Config.Bind("General", 
+                                                 "ExplosionVibrationStrength", 
+                                                 1.0f, 
+                                                 "Strength of the vibration when the bomb explodes (0.1 = 10% strength, 1.0 = 100% strength)" );
+        
+        enableModuleSolveVibration = Config.Bind("General", 
+                                     "EnableModuleSolveVibration", 
+                                     true, 
+                                     "Enable or disable haptic feedback/vibrations when a module is solved");
+        
+        moduleSolveVibrationStrength = Config.Bind("General", 
+                                                 "ModuleSolveVibrationStrength", 
+                                                 1.0f, 
+                                                 "Strength of the vibration when a module is solved (0.1 = 10% strength, 1.0 = 100% strength)" );
+        
+        enableButtonVibration = Config.Bind("Button", 
+                                     "EnableVibration", 
+                                     true, 
+                                     "Enable or disable haptic feedback/vibrations for button presses");
+        
+        buttonPressVibrationStrength = Config.Bind("Button", 
+                                                 "PressVibrationStrength", 
+                                                 0.4f, 
+                                                 "Strength of the vibration when a button is pressed (0.1 = 10% strength, 1.0 = 100% strength)" );
+        
+        buttonReleaseVibrationStrength = Config.Bind("Button", 
+                                                 "ReleaseVibrationStrength", 
+                                                 0.5f, 
+                                                 "Strength of the vibration when a button is released (0.1 = 10% strength, 1.0 = 100% strength)" );
+        
+        enableKeypadVibration = Config.Bind("Keypad", 
+                                     "EnableVibration", 
+                                     true, 
+                                     "Enable or disable haptic feedback/vibrations for the Keypad module");
+        
+        keypadVibrationBaseStrength = Config.Bind("Keypad", 
+                                                 "VibrationBaseStrength", 
+                                                 0.25f, 
+                                                 "Base strength of the vibration for the Keypad module (0.1 = 10% strength, 1.0 = 100% strength)" );
+        
+        enableSimonVibration = Config.Bind("Simon", 
+                                     "EnableVibration", 
+                                     true, 
+                                     "Enable or disable haptic feedback/vibrations for the Simon Says module");
+        
+        simonVibrationBaseStrength = Config.Bind("Simon", 
+                                                 "VibrationBaseStrength", 
+                                                 0.2f, 
+                                                 "Base strength of the vibration for the Simon Says module (0.1 = 10% strength, 1.0 = 100% strength)" );
+        
+        enableWhosOnFirstVibration = Config.Bind("WhosOnFirst", 
+                                     "EnableVibration", 
+                                     true, 
+                                     "Enable or disable haptic feedback/vibrations for the Who's On First module");
+        
+        whosOnFirstVibrationBaseStrength = Config.Bind("WhosOnFirst", 
+                                                 "VibrationBaseStrength", 
+                                                 0.25f, 
+                                                 "Base strength of the vibration for the Who's On First module (0.1 = 10% strength, 1.0 = 100% strength)" );
+        
+        enableMemoryVibration = Config.Bind("Memory", 
+                                     "EnableVibration", 
+                                     true, 
+                                     "Enable or disable haptic feedback/vibrations for the Memory module");
+        
+        memoryVibrationBaseStrength = Config.Bind("Memory", 
+                                                 "VibrationBaseStrength", 
+                                                 0.2f, 
+                                                 "Base strength of the vibration for the Memory module (0.1 = 10% strength, 1.0 = 100% strength)" );
+        
+        enableMorseVibration = Config.Bind("Morse", 
+                                     "EnableVibration", 
+                                     true, 
+                                     "Enable or disable haptic feedback/vibrations for the Morse Code module");
+        
+        morseVibrationStrength = Config.Bind("Morse", 
+                                                 "VibrationStrength", 
+                                                 0.2f, 
+                                                 "Strength of the vibration for the Morse Code module (0.1 = 10% strength, 1.0 = 100% strength)" );
+        
+        enableComplicatedWireVibration = Config.Bind("ComplicatedWire", 
+                                     "EnableVibration", 
+                                     true, 
+                                     "Enable or disable haptic feedback/vibrations for the Complicated Wire module");
+        
+        complicatedWireVibrationStrength = Config.Bind("ComplicatedWire", 
+                                                 "VibrationStrength", 
+                                                 0.5f, 
+                                                 "Strength of the vibration for the Complicated Wire module (0.1 = 10% strength, 1.0 = 100% strength)" );
+        
+        enableWireSequenceVibration = Config.Bind("WireSequence", 
+                                     "EnableVibration", 
+                                     true, 
+                                     "Enable or disable haptic feedback/vibrations for the Wire Sequence module");
+        
+        wireSequenceWireVibrationStrength = Config.Bind("WireSequence", 
+                                                 "WireVibrationStrength", 
+                                                 0.5f, 
+                                                 "Strength of the vibration for wire snips in the Wire Sequence module (0.1 = 10% strength, 1.0 = 100% strength)" );
+        
+        wireSequenceStageVibrationBaseStrength = Config.Bind("WireSequence", 
+                                                 "StageVibrationBaseStrength", 
+                                                 0.2f, 
+                                                 "Base strength of the vibration for stage transitions in the Wire Sequence module (0.1 = 10% strength, 1.0 = 100% strength)" );
+        
+        enableMazeVibration = Config.Bind("Maze", 
+                                     "EnableVibration", 
+                                     true, 
+                                     "Enable or disable haptic feedback/vibrations for the Maze module");
+        
+        mazeVibrationStrength = Config.Bind("Maze", 
+                                                 "VibrationStrength", 
+                                                 0.3f, 
+                                                 "Strength of the vibration for the Maze module (0.1 = 10% strength, 1.0 = 100% strength)" );
+        
+        enablePasswordVibration = Config.Bind("Password", 
+                                     "EnableVibration", 
+                                     true, 
+                                     "Enable or disable haptic feedback/vibrations for the Password module");
+        
+        passwordVibrationStrength = Config.Bind("Password", 
+                                                 "VibrationStrength", 
+                                                 0.3f, 
+                                                 "Strength of the vibration for the Password module (0.1 = 10% strength, 1.0 = 100% strength)" );
+        
+        enableCapacitorDischargeVibration = Config.Bind("CapacitorDischarge", 
+                                     "EnableVibration", 
+                                     true, 
+                                     "Enable or disable haptic feedback/vibrations for the Capacitor Discharge module");
+        
+        capacitorDischargePushVibrationStrength = Config.Bind("CapacitorDischarge", 
+                                                 "PushVibrationStrength", 
+                                                 0.7f, 
+                                                 "Strength of the vibration when pushing the capacitor in the Capacitor Discharge module (0.1 = 10% strength, 1.0 = 100% strength)" );
+        
+        capacitorDischargeReleaseVibrationStrength = Config.Bind("CapacitorDischarge", 
+                                                 "ReleaseVibrationStrength", 
+                                                 0.1f, 
+                                                 "Strength of the vibration when releasing the capacitor in the Capacitor Discharge module (0.1 = 10% strength, 1.0 = 100% strength)" );
+        
+        enableNeedyKnobVibration = Config.Bind("NeedyKnob", 
+                                     "EnableVibration", 
+                                     true, 
+                                     "Enable or disable haptic feedback/vibrations for the Needy Knob module");
+        
+        needyKnobVibrationStrength = Config.Bind("NeedyKnob", 
+                                                 "VibrationStrength", 
+                                                 0.2f, 
+                                                 "Strength of the vibration for the Needy Knob module (0.1 = 10% strength, 1.0 = 100% strength)" );
+        
+        enableVentGasVibration = Config.Bind("VentGas", 
+                                     "EnableVibration", 
+                                     true, 
+                                     "Enable or disable haptic feedback/vibrations for the Venting Gas module");
+        
+        ventGasVibrationStrength = Config.Bind("VentGas", 
+                                                 "VibrationStrength", 
+                                                 0.5f, 
+                                                 "Strength of the vibration for the Venting Gas module (0.1 = 10% strength, 1.0 = 100% strength)" );
+        
+        enableAlarmClockVibration = Config.Bind("AlarmClock", 
+                                     "EnableVibration", 
+                                     true, 
+                                     "Enable or disable haptic feedback/vibrations for the Alarm Clock module");
+        
+        alarmClockVibrationStrength = Config.Bind("AlarmClock", 
+                                                 "VibrationStrength", 
+                                                 1.0f, 
+                                                 "Strength of the vibration for the Alarm Clock module (0.1 = 10% strength, 1.0 = 100% strength)" );
+        
+        intifaceHost = Config.Bind("Intiface", 
+                                     "Host", 
+                                     "127.0.0.1", 
+                                     "Host address for Intiface server");
+        
+        intifacePort = Config.Bind("Intiface", 
+                                     "Port", 
+                                     12345, 
+                                     "Port number for Intiface server");
+        
         // Plugin startup logic
         Logger = base.Logger;
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
@@ -106,15 +437,18 @@ public class Plugin : BaseUnityPlugin
     /// <param name="duration">Duration in seconds</param>
     public void VibrateAllDevices(float power, float duration)
     {
+        // Power is now set directly by the patches, no multiplier needed
+        float clampedPower = Mathf.Clamp01(power);
+        
         if (buttplugManager != null && buttplugManager.IsConnected)
         {
             var devices = buttplugManager.Devices;
             if (devices.Count > 0)
             {
-                Logger.LogInfo($"Vibrating {devices.Count} devices at {power} power for {duration} seconds");
+                Logger.LogInfo($"Vibrating {devices.Count} devices at {clampedPower} power for {duration} seconds");
                 foreach (var device in devices)
                 {
-                    buttplugManager.VibrateDevice(device.DeviceName, power, duration);
+                    buttplugManager.VibrateDevice(device.DeviceName, clampedPower, duration);
                 }
             }
             else
@@ -136,6 +470,7 @@ public class Plugin : BaseUnityPlugin
     /// <param name="frameDelay">Number of frames to delay (0 for no delay)</param>
     public static void TriggerVibration(float power, float duration, int frameDelay = 0)
     {
+        // No global check needed, patches handle their own enable/disable
         if (frameDelay > 0)
         {
             instance?.StartCoroutine(TriggerVibrationDelayed(power, duration, frameDelay));
@@ -170,16 +505,14 @@ public class WireSnipVibrationPatch
     [HarmonyPostfix]
     public static void Postfix(SnippableWire __instance, bool __state)
     {
+        if (!Plugin.EnableWireVibration) return;
         
         bool wasSnippedBeforeInteract = __state;
-        
-        
         bool isSnippedAfterInteract = __instance.Snipped;
 
-        
         if (!wasSnippedBeforeInteract && isSnippedAfterInteract)
         {
-            Plugin.TriggerVibration(0.5f, 0.1f);
+            Plugin.TriggerVibration(Plugin.WireVibrationStrength, 0.1f);
         }
     }
 }
@@ -194,8 +527,9 @@ public class StrikeVibrationPatch
     [HarmonyPostfix]
     public static void Postfix()
     {
+        if (!Plugin.EnableStrikeVibration) return;
         
-        Plugin.TriggerVibration(0.7f, 0.5f, 1);
+        Plugin.TriggerVibration(Plugin.StrikeVibrationStrength, 0.5f, 1);
     }
 }
 
@@ -209,7 +543,9 @@ public class ExplosionVibrationPatch
     [HarmonyPostfix]
     public static void Postfix()
     {
-        Plugin.TriggerVibration(1.0f, 3.0f, 2);
+        if (!Plugin.EnableExplosionVibration) return;
+        
+        Plugin.TriggerVibration(Plugin.ExplosionVibrationStrength, 3.0f, 2);
     }
 }
 
@@ -222,7 +558,9 @@ public class ModuleSolveVibrationPatch
     [HarmonyPostfix]
     public static void Postfix()
     {
-        Plugin.TriggerVibration(1.0f, 0.1f);
+        if (!Plugin.EnableModuleSolveVibration) return;
+        
+        Plugin.TriggerVibration(Plugin.ModuleSolveVibrationStrength, 0.1f);
     }
 }
 
@@ -237,16 +575,20 @@ public class BigButtonHapticPatch
     [HarmonyPatch("Interact")]
     public static void PressPostfix()
     {
-        Plugin.TriggerVibration(0.4f, 500.0f);
+        if (!Plugin.EnableButtonVibration) return;
+        
+        Plugin.TriggerVibration(Plugin.ButtonPressVibrationStrength, 500.0f);
     }
     
     [HarmonyPrefix]
     [HarmonyPatch("InteractEnded")]
     public static void ReleasePrefix(PressableButton __instance)
     {
+        if (!Plugin.EnableButtonVibration) return;
+        
         if (__instance.IsInteracting())
         {
-            Plugin.TriggerVibration(0.5f, 0.1f);
+            Plugin.TriggerVibration(Plugin.ButtonReleaseVibrationStrength, 0.1f);
         }
     }
 }
@@ -276,16 +618,15 @@ public class KeypadHapticPatch
     [HarmonyPostfix]
     public static void Postfix(bool __result, int __state)
     {
-        if (__result)
-        {
-            int correctButtonsPressedBeforeThisOne = __state;
-            
-            float power = 0.25f + (correctButtonsPressedBeforeThisOne * 0.25f);
-            
-            power = Mathf.Clamp(power, 0.25f, 1.0f);
+        if (!Plugin.EnableKeypadVibration || !__result) return;
+        
+        int correctButtonsPressedBeforeThisOne = __state;
+        
+        float power = Plugin.KeypadVibrationBaseStrength + (correctButtonsPressedBeforeThisOne * 0.25f);
+        
+        power = Mathf.Clamp(power, Plugin.KeypadVibrationBaseStrength, 1.0f);
 
-            Plugin.TriggerVibration(power, 0.3f);
-        }
+        Plugin.TriggerVibration(power, 0.3f);
     }
 }
 
@@ -303,6 +644,7 @@ public class SimonSaysHapticPatch
     [HarmonyPrefix]
     public static void Prefix(SimonComponent __instance, int index)
     {
+        if (!Plugin.EnableSimonVibration) return;
         
         if (__instance.IsSolved || !__instance.IsActive)
         {
@@ -314,8 +656,8 @@ public class SimonSaysHapticPatch
         
         if (__instance.MapToSolution(currentSequence[solveProgress]) == index)
         {
-            float power = 0.2f + (solveProgress * 0.2f);
-            power = Mathf.Clamp(power, 0.2f, 1.0f);
+            float power = Plugin.SimonVibrationBaseStrength + (solveProgress * 0.2f);
+            power = Mathf.Clamp(power, Plugin.SimonVibrationBaseStrength, 1.0f);
 
             Plugin.TriggerVibration(power, DURATION);
         }
@@ -338,16 +680,15 @@ public class WhosOnFirstHapticPatch
     [HarmonyPostfix]
     public static void Postfix(bool __result, int __state)
     {
-        if (__result)
-        {
-            int stageBeforePress = __state;
-            
-            float power = 0.25f + (stageBeforePress * 0.25f);
-            
-            power = Mathf.Clamp(power, 0.25f, 0.75f);
+        if (!Plugin.EnableWhosOnFirstVibration || !__result) return;
+        
+        int stageBeforePress = __state;
+        
+        float power = Plugin.WhosOnFirstVibrationBaseStrength + (stageBeforePress * 0.25f);
+        
+        power = Mathf.Clamp(power, Plugin.WhosOnFirstVibrationBaseStrength, 1.0f);
 
-            Plugin.TriggerVibration(power, DURATION);
-        }
+        Plugin.TriggerVibration(power, DURATION);
     }
 }
 
@@ -364,6 +705,8 @@ public class MemoryComponentHapticPatch
     [HarmonyPrefix]
     public static void Prefix(MemoryComponent __instance)
     {
+        if (!Plugin.EnableMemoryVibration) return;
+        
         if (__instance.IsSolved)
         {
             return;
@@ -371,9 +714,9 @@ public class MemoryComponentHapticPatch
         
         int stage = (int)currentStageField.GetValue(__instance);
         
-        float power = 0.2f + (stage * 0.2f);
+        float power = Plugin.MemoryVibrationBaseStrength + (stage * 0.2f);
         
-        power = Mathf.Clamp(power, 0.2f, 1.0f);
+        power = Mathf.Clamp(power, Plugin.MemoryVibrationBaseStrength, 1.0f);
 
         Plugin.TriggerVibration(power, DURATION);
     }
@@ -384,7 +727,6 @@ public class MemoryComponentHapticPatch
 [HarmonyPatch]
 public class MorseCodeHapticPatch
 {
-    private const float POWER = 0.2f;
     private const float DURATION = 0.2f;
     
     [HarmonyPatch(typeof(MorseCodeComponent), "OnButtonUpPushed")]
@@ -400,13 +742,14 @@ public class MorseCodeHapticPatch
     [HarmonyPostfix]
     public static void Postfix(MorseCodeComponent __instance, int __state)
     {
+        if (!Plugin.EnableMorseVibration) return;
+        
         int oldIndex = __state;
         int newIndex = __instance.CurrentFrequencyIndex;
         
-        
         if (oldIndex != newIndex)
         {
-            Plugin.TriggerVibration(POWER, DURATION);
+            Plugin.TriggerVibration(Plugin.MorseVibrationStrength, DURATION);
         }
     }
 }
@@ -417,9 +760,6 @@ public class MorseCodeHapticPatch
 [HarmonyPatch(typeof(VennSnippableWire), "Interact")]
 public class ComplicatedWireHapticPatch
 {
-    private const float POWER = 0.5f;
-    private const float DURATION = 0.15f;
-    
     [HarmonyPrefix]
     public static void Prefix(VennSnippableWire __instance, out bool __state)
     {
@@ -429,12 +769,14 @@ public class ComplicatedWireHapticPatch
     [HarmonyPostfix]
     public static void Postfix(VennSnippableWire __instance, bool __state)
     {
+        if (!Plugin.EnableComplicatedWireVibration) return;
+        
         bool wasSnippedBeforeInteract = __state;
         bool isSnippedAfterInteract = __instance.Snipped;
         
         if (!wasSnippedBeforeInteract && isSnippedAfterInteract)
         {
-            Plugin.TriggerVibration(POWER, DURATION);
+            Plugin.TriggerVibration(Plugin.ComplicatedWireVibrationStrength, 0.15f);
         }
     }
 }
@@ -445,9 +787,6 @@ public class ComplicatedWireHapticPatch
 [HarmonyPatch(typeof(WireSequenceWire), "Interact")]
 public class WireSequenceWireHapticPatch
 {
-    private const float POWER = 0.5f;
-    private const float DURATION = 0.1f;
-
     [HarmonyPrefix]
     public static void Prefix(WireSequenceWire __instance, out bool __state)
     {
@@ -457,12 +796,14 @@ public class WireSequenceWireHapticPatch
     [HarmonyPostfix]
     public static void Postfix(WireSequenceWire __instance, bool __state)
     {
+        if (!Plugin.EnableWireSequenceVibration) return;
+        
         bool wasSnippedBefore = __state;
         bool isSnippedAfter = __instance.Snipped;
         
         if (!wasSnippedBefore && isSnippedAfter)
         {
-            Plugin.TriggerVibration(POWER, DURATION);
+            Plugin.TriggerVibration(Plugin.WireSequenceWireVibrationStrength, 0.1f);
         }
     }
 }
@@ -487,14 +828,16 @@ public class WireSequenceStageHapticPatch
     [HarmonyPostfix]
     public static void Postfix(WireSequenceComponent __instance, int __state)
     {
+        if (!Plugin.EnableWireSequenceVibration) return;
+        
         int oldPage = __state;
         int newPage = (int)currentPageField.GetValue(__instance);
         
         if (newPage > oldPage)
         {
-            float power = 0.2f + (oldPage * 0.2f);
+            float power = Plugin.WireSequenceStageVibrationBaseStrength + (oldPage * 0.2f);
             
-            power = Mathf.Clamp(power, 0.2f, 0.8f);
+            power = Mathf.Clamp(power, Plugin.WireSequenceStageVibrationBaseStrength, 1.0f);
 
             Plugin.TriggerVibration(power, DURATION);
         }
@@ -507,13 +850,12 @@ public class WireSequenceStageHapticPatch
 [HarmonyPatch(typeof(InvisibleWallsComponent), "ButtonDown")]
 public class MazeHapticPatch
 {
-    private const float POWER = 0.3f;
-    private const float DURATION = 0.2f;
-    
     [HarmonyPrefix]
     public static void Prefix()
     {
-        Plugin.TriggerVibration(POWER, DURATION);
+        if (!Plugin.EnableMazeVibration) return;
+        
+        Plugin.TriggerVibration(Plugin.MazeVibrationStrength, 0.2f);
     }
 }
 
@@ -523,15 +865,14 @@ public class MazeHapticPatch
 [HarmonyPatch]
 public class PasswordSpinnerHapticPatch
 {
-    private const float POWER = 0.3f;
-    private const float DURATION = 0.2f;
-    
     [HarmonyPatch(typeof(CharSpinner), "Next")]
     [HarmonyPatch(typeof(CharSpinner), "Previous")]
     [HarmonyPostfix]
     public static void Postfix()
     {
-        Plugin.TriggerVibration(POWER, DURATION);
+        if (!Plugin.EnablePasswordVibration) return;
+        
+        Plugin.TriggerVibration(Plugin.PasswordVibrationStrength, 0.2f);
     }
 }
 
@@ -555,14 +896,18 @@ public class CapacitorDischargeHapticPatch
     [HarmonyPostfix]
     public static void PushPostfix()
     {
-        Plugin.TriggerVibration(PUSH_POWER, PUSH_DURATION);
+        if (!Plugin.EnableCapacitorDischargeVibration) return;
+        
+        Plugin.TriggerVibration(Plugin.CapacitorDischargePushVibrationStrength, 500.0f);
     }
     
     [HarmonyPatch(typeof(NeedyDischargeComponent), "OnRelease")]
     [HarmonyPostfix]
     public static void ReleasePostfix()
     {
-        Plugin.TriggerVibration(RELEASE_POWER, RELEASE_DURATION);
+        if (!Plugin.EnableCapacitorDischargeVibration) return;
+        
+        Plugin.TriggerVibration(Plugin.CapacitorDischargeReleaseVibrationStrength, 0.1f);
     }
 }
 
@@ -572,15 +917,14 @@ public class CapacitorDischargeHapticPatch
 [HarmonyPatch]
 public class NeedyKnobHapticPatch
 {
-    private const float POWER = 0.2f;
-    private const float DURATION = 0.2f;
-    
     [HarmonyPatch(typeof(PointingKnob), "RotateLeft")]
     [HarmonyPatch(typeof(PointingKnob), "RotateRight")]
     [HarmonyPostfix]
     public static void Postfix()
     {
-        Plugin.TriggerVibration(POWER, DURATION);
+        if (!Plugin.EnableNeedyKnobVibration) return;
+        
+        Plugin.TriggerVibration(Plugin.NeedyKnobVibrationStrength, 0.2f);
     }
 }
 
@@ -590,14 +934,13 @@ public class NeedyKnobHapticPatch
 [HarmonyPatch(typeof(NeedyVentComponent), "ButtonDown")]
 public class VentGasHapticPatch
 {
-    private const float POWER = 0.5f;
-    private const float DURATION = 0.5f;
-    
     private static readonly FieldInfo displayChangingField = AccessTools.Field(typeof(NeedyVentComponent), "displayChanging");
     
     [HarmonyPrefix]
     public static void Prefix(NeedyVentComponent __instance, int index)
     {
+        if (!Plugin.EnableVentGasVibration) return;
+        
         // Do nothing if needy is not active.
         bool isDisplayChanging = (bool)displayChangingField.GetValue(__instance);
         if (__instance.State != NeedyComponent.NeedyStateEnum.Running || isDisplayChanging)
@@ -620,7 +963,7 @@ public class VentGasHapticPatch
         
         if (isCorrectPress)
         {
-            Plugin.TriggerVibration(POWER, DURATION);
+            Plugin.TriggerVibration(Plugin.VentGasVibrationStrength, 0.5f);
         }
     }
 }
@@ -638,9 +981,9 @@ public class AlarmClockHapticController : MonoBehaviour
     private const float POWER = 1.0f;
     
     private const float BEEP_VIBRATION_DURATION = 0.2f;
-    private const float PAUSE_DURATION = 0.1f;
+    private const float PAUSE_DURATION = 0.10f;
     
-    private const float TOTAL_CYCLE_INTERVAL = BEEP_VIBRATION_DURATION + PAUSE_DURATION;
+    private const float TOTAL_CYCLE_INTERVAL = (BEEP_VIBRATION_DURATION + PAUSE_DURATION)*2;
 
     private Coroutine hapticLoopCoroutine;
     private FieldInfo isOnField;
@@ -676,7 +1019,10 @@ public class AlarmClockHapticController : MonoBehaviour
 
         while ((bool)isOnField.GetValue(alarmClockInstance))
         {
-            Plugin.TriggerVibration(POWER, BEEP_VIBRATION_DURATION);
+            if (Plugin.EnableAlarmClockVibration)
+            {
+                Plugin.TriggerVibration(Plugin.AlarmClockVibrationStrength, BEEP_VIBRATION_DURATION);
+            }
             
             yield return new WaitForSeconds(TOTAL_CYCLE_INTERVAL);
         }
