@@ -434,3 +434,99 @@ public class ComplicatedWireHapticPatch
         }
     }
 }
+
+/// <summary>
+/// WIRE SEQUENCE MODULE PART 1 - SNIPPING A WIRE
+/// </summary>
+[HarmonyPatch(typeof(WireSequenceWire), "Interact")]
+public class WireSequenceWireHapticPatch
+{
+    private const float POWER = 0.5f;
+    private const float DURATION = 0.1f;
+
+    [HarmonyPrefix]
+    public static void Prefix(WireSequenceWire __instance, out bool __state)
+    {
+        __state = __instance.Snipped;
+    }
+
+    [HarmonyPostfix]
+    public static void Postfix(WireSequenceWire __instance, bool __state)
+    {
+        bool wasSnippedBefore = __state;
+        bool isSnippedAfter = __instance.Snipped;
+        
+        if (!wasSnippedBefore && isSnippedAfter)
+        {
+            Plugin.TriggerVibration(POWER, DURATION);
+        }
+    }
+}
+
+
+/// <summary>
+/// WIRE SEQUENCE MODULE PART 2 - GOING TO NEXT STAGE
+/// </summary>
+[HarmonyPatch(typeof(WireSequenceComponent), "DownButtonPressed")]
+public class WireSequenceStageHapticPatch
+{
+    private const float DURATION = 0.9f;
+    
+    private static readonly FieldInfo currentPageField = AccessTools.Field(typeof(WireSequenceComponent), "currentPage");
+    
+    [HarmonyPrefix]
+    public static void Prefix(WireSequenceComponent __instance, out int __state)
+    {
+        __state = (int)currentPageField.GetValue(__instance);
+    }
+    
+    [HarmonyPostfix]
+    public static void Postfix(WireSequenceComponent __instance, int __state)
+    {
+        int oldPage = __state;
+        int newPage = (int)currentPageField.GetValue(__instance);
+        
+        if (newPage > oldPage)
+        {
+            float power = 0.2f + (oldPage * 0.2f);
+            
+            power = Mathf.Clamp(power, 0.2f, 0.8f);
+
+            Plugin.TriggerVibration(power, DURATION);
+        }
+    }
+}
+
+/// <summary>
+/// MAZE MODULE
+/// </summary>
+[HarmonyPatch(typeof(InvisibleWallsComponent), "ButtonDown")]
+public class MazeHapticPatch
+{
+    private const float POWER = 0.3f;
+    private const float DURATION = 0.2f;
+    
+    [HarmonyPrefix]
+    public static void Prefix()
+    {
+        Plugin.TriggerVibration(POWER, DURATION);
+    }
+}
+
+/// <summary>
+/// PASSWORD MODULE
+/// </summary>
+[HarmonyPatch]
+public class PasswordSpinnerHapticPatch
+{
+    private const float POWER = 0.3f;
+    private const float DURATION = 0.2f;
+    
+    [HarmonyPatch(typeof(CharSpinner), "Next")]
+    [HarmonyPatch(typeof(CharSpinner), "Previous")]
+    [HarmonyPostfix]
+    public static void Postfix()
+    {
+        Plugin.TriggerVibration(POWER, DURATION);
+    }
+}
