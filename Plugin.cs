@@ -415,6 +415,46 @@ public class Plugin : BaseUnityPlugin
         }
     }
     
+    private void Update()
+    {
+        // Check for K key press to trigger reconnect
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Logger.LogInfo("K key pressed - attempting to reconnect to Buttplug...");
+            ReconnectButtplug();
+        }
+        
+        // Check for P key press to send test vibration pulse
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            Logger.LogInfo("P key pressed - stopping vibratons");
+            VibrateAllDevices(0.1f, 0.05f);
+        }
+    }
+    
+    private void ReconnectButtplug()
+    {
+        if (buttplugManager == null)
+        {
+            Logger.LogWarning("ButtplugManager is not initialized!");
+            return;
+        }
+        
+        Logger.LogInfo("Disconnecting from Buttplug server...");
+        buttplugManager.Disconnect();
+        
+        
+        StartCoroutine(ReconnectAfterDelay(1.0f));
+    }
+    
+    private System.Collections.IEnumerator ReconnectAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        
+        Logger.LogInfo("Attempting to reconnect to Buttplug server...");
+        buttplugManager.Connect();
+    }
+    
     public void TestVibration()
     {
         if (buttplugManager != null && buttplugManager.IsConnected)
