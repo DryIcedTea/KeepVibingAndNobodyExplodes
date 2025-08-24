@@ -72,7 +72,12 @@ Each supported module has individual settings:
 - **K**: Reconnect to Intiface server
 - **P**: Stop all vibrations
 
+## For Bomb manual reader:
+This mod is designed for the person defusing the bomb.
+However, there are great tools like [MusicVibes](https://github.com/Shadlock0133/music-vibes) that allows your toys to vibrate when the other person is speaking.
+
 ## Feedback
 If you have any feedback, feel free to open an issue, [tweet](https://twitter.com/DryIcedMatcha) at me or message me on discord. You'll find me in the [buttplug.io discord](https://discord.buttplug.io/)!
+You can also find me on Bluesky at [@dryicedmatcha](https://bsky.app/profile/dryicedmatcha.bsky.social).
 
 If you see this and happen to be a millionaire, consider [buying me a coffee](https://ko-fi.com/dryicedmatcha) :)
