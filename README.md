@@ -73,3 +73,5 @@ Each supported module has individual settings:
 
 ## Feedback
 If you have any feedback, feel free to open an issue, [tweet](https://twitter.com/DryIcedMatcha) at me or message me on discord. You'll find me in the [buttplug.io discord](https://discord.buttplug.io/)!
+
+If you see this and happen to be a millionaire, consider [buying me a coffee](https://ko-fi.com/dryicedmatcha) :)
