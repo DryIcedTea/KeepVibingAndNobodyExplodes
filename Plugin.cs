@@ -639,13 +639,49 @@ public class KeypadHapticPatch
 }
 
 /// <summary>
-/// SIMON SAYS MODULE
+/// PATCH: Simon says glow
+/// </summary>
+[HarmonyPatch(typeof(SimonButton), "Glow")]
+public class SimonSaysFlashHapticPatch
+{
+    private const float DURATION = 0.3f;
+
+    
+    private static readonly FieldInfo isFocusedField = AccessTools.Field(typeof(BombComponent), "isFocused");
+    private static readonly FieldInfo lastIndexField = AccessTools.Field(typeof(SimonComponent), "lastIndex");
+
+    [HarmonyPrefix]
+    public static void Prefix(SimonButton __instance)
+    {
+        if (!Plugin.EnableSimonVibration) return;
+        
+        var simonComponent = __instance.ParentComponent as SimonComponent;
+        if (simonComponent == null) return;
+
+        
+        bool isModuleFocused = (bool)isFocusedField.GetValue(simonComponent);
+        if (isModuleFocused)
+        {
+            
+            int currentStage = (int)lastIndexField.GetValue(simonComponent);
+            
+            float power = Plugin.SimonVibrationBaseStrength + (currentStage * 0.2f);
+            power = Mathf.Clamp(power, Plugin.SimonVibrationBaseStrength, 1.0f);
+            
+            Plugin.TriggerVibration(power, DURATION);
+        }
+    }
+}
+
+
+/// <summary>
+/// PATCH 2: Vibrations on button presses.
 /// </summary>
 [HarmonyPatch(typeof(SimonComponent), "ButtonDown")]
-public class SimonSaysHapticPatch
+public class SimonSaysButtonHapticPatch
 {
-    private const float DURATION = 0.5f;
-    
+    private const float DURATION = 0.3f;
+
     private static readonly FieldInfo solveProgressField = AccessTools.Field(typeof(SimonComponent), "solveProgress");
     private static readonly FieldInfo currentSequenceField = AccessTools.Field(typeof(SimonComponent), "currentSequence");
     
@@ -658,15 +694,14 @@ public class SimonSaysHapticPatch
         {
             return;
         }
-        
+
         int solveProgress = (int)solveProgressField.GetValue(__instance);
         int[] currentSequence = (int[])currentSequenceField.GetValue(__instance);
-        
+
         if (__instance.MapToSolution(currentSequence[solveProgress]) == index)
         {
             float power = Plugin.SimonVibrationBaseStrength + (solveProgress * 0.2f);
             power = Mathf.Clamp(power, Plugin.SimonVibrationBaseStrength, 1.0f);
-
             Plugin.TriggerVibration(power, DURATION);
         }
     }
