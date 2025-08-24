@@ -16,20 +16,20 @@ The plugin supports vibration feedback for all vanilla Keep Talking and Nobody E
 
 #### Standard Modules
 - **Simple Wires**: Vibration when cutting wires
-- **The Button**: Different intensities for press and release
+- **The Button**: Vibrations when pressing and holding the button down
 - **Keypad/Symbols**: Vibration based on symbol presses
-- **Simon Says**: Dynamic feedback for sequence interactions
+- **Simon Says**: Scaling Vibrations for light flash and button presses
 - **Who's On First**: Vibrations for button presses
-- **Memory**: Feedback for button interactions
-- **Morse Code**: Feeback when scrolling through frequencies
-- **Complicated Wires**: Feedback for wire cutting
-- **Wire Sequences**: Multi-stage vibration for wire cutting and progression
-- **Maze**: Navigation feedback
-- **Passwords**: Letter selection feedback
+- **Memory**: Vibrations for button interactions
+- **Morse Code**: Vibrations for morse code signals and scrolling through frequencies.
+- **Complicated Wires**: Vibration when cutting wires
+- **Wire Sequences**: Scaling vibrations for wire cutting and progression
+- **Maze**: Navigation vibrations
+- **Passwords**: Letter selection vibrations
 
 #### Needy Modules & Miscellaneous
 - **Capacitor Discharge**: Different vibrations for push/release actions
-- **Knob**: Rotation feedback
+- **Knob**: Vibrations when rotating the knob
 - **Venting Gas**: Pressure release vibrations
 - **Alarm Clock**: Vibration when alarm is buzzing
 
