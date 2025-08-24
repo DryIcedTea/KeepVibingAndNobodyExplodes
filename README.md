@@ -38,7 +38,7 @@ The plugin supports vibration feedback for all vanilla Keep Talking and Nobody E
 ### Prerequisites
 1. **Keep Talking and Nobody Explodes**
 2. **[BepInEx](https://github.com/BepInEx/BepInEx)**: 
-3. **[BepInExConfigurationManager (Optional)](https://github.com/BepInEx/BepInEx.ConfigurationManager)** if you want an in game settings menu (Press F1 to open)
+3. **[BepInExConfigurationManager (Optional)](https://github.com/BepInEx/BepInEx.ConfigurationManager)** if you want an in game settings menu (Press F1 to open). Download the one for BepInEx 5
 3. **[Intiface Central](https://intiface.com/central/)**
 4. Compatible device (see [Buttplug.io device support](https://iostindex.com/?filter0Availability=Available,DIY&filter1ButtplugSupport=4))
 
