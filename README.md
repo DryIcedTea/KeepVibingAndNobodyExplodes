@@ -34,6 +34,7 @@ The plugin supports vibration feedback for all vanilla Keep Talking and Nobody E
 - **Alarm Clock**: Vibration when alarm is buzzing
 
 ## Installation
+[Video Tutorial](https://youtu.be/XBMA2f2iLNU)
 
 ### Prerequisites
 1. **Keep Talking and Nobody Explodes**
