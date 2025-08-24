@@ -55,13 +55,13 @@ The plugin supports vibration feedback for all vanilla Keep Talking and Nobody E
 The plugin creates a detailed configuration file at `BepInEx/config/dryicedmatcha.keepvibing.cfg` with the following options:
 
 ### Connection Settings
-- **Intiface Host**: Server address (default: `127.0.0.1`)
-- **Intiface Port**: Server port (default: `12345`)
+- **Intiface Host**: Server address
+- **Intiface Port**: Server port
 
 ### General Game Events
-- **Strike Vibration**: Enable/disable and intensity (default: 70%)
-- **Explosion Vibration**: Enable/disable and intensity (default: 100%)
-- **Module Solve Vibration**: Enable/disable and intensity (default: 100%)
+- **Strike Vibration**: Enable/disable and intensity
+- **Explosion Vibration**: Enable/disable and intensity
+- **Module Solve Vibration**: Enable/disable and intensity
 
 ### Per-Module Settings
 Each supported module has individual settings:
